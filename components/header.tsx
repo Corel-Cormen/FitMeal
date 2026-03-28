@@ -27,14 +27,17 @@ export function Header() {
           <Link href="#oferta" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
             Oferta
           </Link>
-          <Link href="#jak-dziala" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
-            Jak to działa
-          </Link>
           <Link href="#menu" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
             Menu
           </Link>
           <Link href="#cennik" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
             Cennik
+          </Link>
+          <Link href="#sprawdz-dostepnosc" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+            Zasięg dostaw
+          </Link>
+          <Link href="#faq" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+            Pomoc
           </Link>
         </nav>
 

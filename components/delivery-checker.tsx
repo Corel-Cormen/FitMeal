@@ -1,10 +1,14 @@
 "use client"
 
 import { useState } from "react"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import {
   MapPin,
   Search,
@@ -15,29 +19,132 @@ import {
   Loader2,
   ChevronRight,
   Info,
+  Send,
 } from "lucide-react"
 
 const deliveryAreas = [
-  { city: "Warszawa", available: true, deliveryTime: "6:00-9:00", zones: ["Srodmiescie", "Mokotow", "Wola", "Praga", "Zoliborz", "Bielany", "Ursynow", "Wilanow", "Bemowo", "Ochota"] },
-  { city: "Kraków", available: true, deliveryTime: "6:30-9:30", zones: ["Stare Miasto", "Kazimierz", "Podgorze", "Nowa Huta", "Krowodrza", "Bronowice"] },
-  { city: "Wroclaw", available: true, deliveryTime: "6:00-9:00", zones: ["Stare Miasto", "Krzyki", "Fabryczna", "Psie Pole", "Srodmiescie"] },
-  { city: "Poznan", available: true, deliveryTime: "6:30-9:30", zones: ["Stare Miasto", "Jezyce", "Wilda", "Grunwald", "Nowe Miasto"] },
-  { city: "Gdansk", available: true, deliveryTime: "6:00-9:00", zones: ["Srodmiescie", "Wrzeszcz", "Oliwa", "Przymorze", "Zaspa"] },
-  { city: "Gdynia", available: true, deliveryTime: "6:00-9:00", zones: ["Srodmiescie", "Orłowo", "Redlowo", "Wielki Kack"] },
+  { city: "Warszawa", available: true, deliveryTime: "6:00-9:00", zones: ["Śródmiescie", "Mokotów", "Wola", "Praga", "Żoliborz", "Bielany", "Ursynów", "Wilanów", "Bemowo", "Ochota"] },
+  { city: "Kraków", available: true, deliveryTime: "6:30-9:30", zones: ["Stare Miasto", "Kazimierz", "Podgórze", "Nowa Huta", "Krowodrza", "Bronowice"] },
+  { city: "Wrocław", available: true, deliveryTime: "6:00-9:00", zones: ["Stare Miasto", "Krzyki", "Fabryczna", "Psie Pole", "Śródmiescie"] },
+  { city: "Poznań", available: true, deliveryTime: "6:30-9:30", zones: ["Stare Miasto", "Jezyce", "Wilda", "Grunwald", "Nowe Miasto"] },
+  { city: "Gdańsk", available: true, deliveryTime: "6:00-9:00", zones: ["Śródmiescie", "Wrzeszcz", "Oliwa", "Przymorze", "Zaspa"] },
+  { city: "Gdynia", available: true, deliveryTime: "6:00-9:00", zones: ["Śródmiescie", "Orłowo", "Redłowo", "Wielki Kack"] },
   { city: "Sopot", available: true, deliveryTime: "6:00-9:00", zones: ["Caly obszar"] },
-  { city: "Lodz", available: true, deliveryTime: "6:30-9:30", zones: ["Srodmiescie", "Polesie", "Baluty", "Widzew"] },
-  { city: "Katowice", available: "soon", deliveryTime: "Wkrotce", zones: [] },
-  { city: "Szczecin", available: "soon", deliveryTime: "Wkrotce", zones: [] },
-  { city: "Lublin", available: "soon", deliveryTime: "Wkrotce", zones: [] },
+  { city: "Łodź", available: true, deliveryTime: "6:30-9:30", zones: ["Śródmiescie", "Polesie", "Bałuty", "Widzew"] },
+  { city: "Katowice", available: "soon", deliveryTime: "Wkrótce", zones: [] },
+  { city: "Szczecin", available: "soon", deliveryTime: "Wkrótce", zones: [] },
+  { city: "Lublin", available: "soon", deliveryTime: "Wkrótce", zones: [] },
 ]
 
-const popularCities = ["Warszawa", "Krakow", "Wroclaw", "Poznan", "Gdansk"]
+const popularCities = ["Warszawa", "Kraków", "Wrocław", "Poznań", "Gdańsk"]
 
 export function DeliveryChecker() {
   const [searchValue, setSearchValue] = useState("")
   const [isSearching, setIsSearching] = useState(false)
   const [result, setResult] = useState<typeof deliveryAreas[0] | null | "not-found">(null)
   const [showAllCities, setShowAllCities] = useState(false)
+  const [notifyEmails, setNotifyEmails] = useState<Record<string, string>>({})
+  const [sentEmails, setSentEmails] = useState<Record<string, boolean>>({})
+  const [isReportDialogOpen, setIsReportDialogOpen] = useState(false)
+  const [reportCity, setReportCity] = useState("")
+  const [reportEmail, setReportEmail] = useState("")
+  const [reportMessage, setReportMessage] = useState("")
+  const [isSubmittingReport, setIsSubmittingReport] = useState(false)
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
+  const handleNotifySubmit = (identifier: string) => {
+    const email = notifyEmails[identifier] || ""
+    
+    if (!email.trim()) {
+      toast.error("Proszę wpisać email", {
+        style: {
+          background: "#fee2e2",
+          border: "1px solid #fca5a5",
+          color: "#991b1b",
+        },
+      })
+      return
+    }
+
+    if (!validateEmail(email)) {
+      toast.error("Email nie jest w prawidłowym formacie", {
+        style: {
+          background: "#fee2e2",
+          border: "1px solid #fca5a5",
+          color: "#991b1b",
+        },
+      })
+      return
+    }
+
+    toast.success("Email został wysłany. Powiadomimy Cię wkrótce!", {
+      style: {
+        background: "#dcfce7",
+        border: "1px solid #86efac",
+        color: "#166534",
+      },
+    })
+    setNotifyEmails({ ...notifyEmails, [identifier]: "" })
+    setSentEmails({ ...sentEmails, [identifier]: true })
+  }
+
+  const handleReportCitySubmit = async () => {
+    if (!reportCity.trim()) {
+      toast.error("Proszę wpisać nazwę miasta", {
+        style: {
+          background: "#fee2e2",
+          border: "1px solid #fca5a5",
+          color: "#991b1b",
+        },
+      })
+      return
+    }
+
+    if (!reportEmail.trim()) {
+      toast.error("Proszę wpisać email", {
+        style: {
+          background: "#fee2e2",
+          border: "1px solid #fca5a5",
+          color: "#991b1b",
+        },
+      })
+      return
+    }
+
+    if (!validateEmail(reportEmail)) {
+      toast.error("Email nie jest w prawidłowym formacie", {
+        style: {
+          background: "#fee2e2",
+          border: "1px solid #fca5a5",
+          color: "#991b1b",
+        },
+      })
+      return
+    }
+
+    setIsSubmittingReport(true)
+
+    // Symulacja wysyłania zgłoszenia
+    setTimeout(() => {
+      toast.success("Zgłoszenie zostało wysłane! Dziękujemy za pomoc w rozwoju naszej sieci dostaw.", {
+        style: {
+          background: "#dcfce7",
+          border: "1px solid #86efac",
+          color: "#166534",
+        },
+      })
+      
+      setReportCity("")
+      setReportEmail("")
+      setReportMessage("")
+      setIsReportDialogOpen(false)
+      setIsSubmittingReport(false)
+    }, 1500)
+  }
 
   const handleSearch = (cityName?: string) => {
     const query = cityName || searchValue
@@ -72,13 +179,13 @@ export function DeliveryChecker() {
           <div className="mb-10 text-center">
             <Badge className="mb-4 gap-1">
               <Truck className="h-3 w-3" />
-              Sprawdz dostepnosc
+              Sprawdź dostępność
             </Badge>
             <h2 className="text-3xl font-bold text-foreground sm:text-4xl">
               Czy dostarczamy <span className="text-primary">do Ciebie</span>?
             </h2>
             <p className="mt-4 text-muted-foreground">
-              Wpisz nazwe miejscowosci, aby sprawdzic czy realizujemy dostawy w Twojej okolicy
+              Wpisz nazwę miejscowości, aby sprawdzić czy realizujemy dostawy w Twojej okolicy
             </p>
           </div>
 
@@ -107,7 +214,8 @@ export function DeliveryChecker() {
                   type="submit"
                   size="lg"
                   className="h-14 px-8"
-                  disabled={!searchValue.trim() || isSearching}
+                  disabled={Boolean(!searchValue.trim() || isSearching)}
+                  suppressHydrationWarning
                 >
                   {isSearching ? (
                     <Loader2 className="h-5 w-5 animate-spin" />
@@ -146,7 +254,7 @@ export function DeliveryChecker() {
                     </div>
                     <div className="flex-1">
                       <h3 className="text-xl font-semibold text-green-800">
-                        {result.available === true ? "Dostarczamy do " : "Wkrotce w "}{result.city}!
+                        {result.available === true ? "Dostarczamy do " : "Wkrótce w "}{result.city}!
                       </h3>
                       {result.available === true ? (
                         <>
@@ -162,7 +270,7 @@ export function DeliveryChecker() {
                           </div>
                           {result.zones.length > 0 && (
                             <div className="mt-4">
-                              <p className="mb-2 text-sm font-medium text-green-800">Obslugiwane dzielnice:</p>
+                              <p className="mb-2 text-sm font-medium text-green-800">Obsługiwane dzielnice:</p>
                               <div className="flex flex-wrap gap-2">
                                 {result.zones.map((zone) => (
                                   <Badge key={zone} variant="secondary" className="bg-green-100 text-green-800">
@@ -173,8 +281,8 @@ export function DeliveryChecker() {
                             </div>
                           )}
                           <Button className="mt-6 gap-2" asChild>
-                            <a href="#register">
-                              Zamow teraz
+                            <a href="#login">
+                              Zamów teraz
                               <ChevronRight className="h-4 w-4" />
                             </a>
                           </Button>
@@ -182,12 +290,24 @@ export function DeliveryChecker() {
                       ) : (
                         <div className="mt-3">
                           <p className="text-green-700">
-                            Jestesmy w trakcie uruchamiania dostaw w tym miescie. Zostaw swoj email, a powiadomimy Cie gdy zaczniemy dostarczac!
+                            Jesteśmy w trakcie uruchamiania dostaw w tym miescie. Zostaw swój email, a powiadomimy Cię gdy zaczniemy dostarczać!
                           </p>
-                          <div className="mt-4 flex gap-2">
-                            <Input placeholder="Twoj email" className="max-w-xs" />
-                            <Button>Powiadom mnie</Button>
-                          </div>
+                          {sentEmails[`soon-${result.city}`] ? (
+                            <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                              <p className="text-green-800 font-medium">Dziękujemy za powiadomienie nas o nowym mieście!</p>
+                              <p className="text-green-700 text-sm mt-1">Będziemy Cię informować o postępach.</p>
+                            </div>
+                          ) : (
+                            <div className="mt-4 flex gap-2">
+                              <Input 
+                                placeholder="Twój email" 
+                                className="max-w-xs"
+                                value={notifyEmails[`soon-${result.city}`] || ""}
+                                onChange={(e) => setNotifyEmails({ ...notifyEmails, [`soon-${result.city}`]: e.target.value })}
+                              />
+                              <Button onClick={() => handleNotifySubmit(`soon-${result.city}`)}>Powiadom mnie</Button>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -206,12 +326,24 @@ export function DeliveryChecker() {
                         Jeszcze nie dostarczamy do {searchValue}
                       </h3>
                       <p className="mt-2 text-amber-700">
-                        Stale rozszerzamy zasieg dostaw. Zostaw swoj email, a powiadomimy Cie gdy zaczniemy dostarczac w Twojej okolicy!
+                        Stale rozszerzamy zasięg dostaw. Zostaw swój email, a powiadomimy Cię gdy zaczniemy dostarczac w Twojej okolicy!
                       </p>
-                      <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-                        <Input placeholder="Twoj email" className="max-w-xs" />
-                        <Button>Powiadom mnie</Button>
-                      </div>
+                      {sentEmails["not-found"] ? (
+                        <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                          <p className="text-green-800 font-medium">Dziękujemy za powiadomienie nas o nowym mieście!</p>
+                          <p className="text-green-700 text-sm mt-1">Będziemy Cię informować o postępach.</p>
+                        </div>
+                      ) : (
+                        <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+                          <Input 
+                            placeholder="Twój email" 
+                            className="max-w-xs"
+                            value={notifyEmails["not-found"] || ""}
+                            onChange={(e) => setNotifyEmails({ ...notifyEmails, ["not-found"]: e.target.value })}
+                          />
+                          <Button onClick={() => handleNotifySubmit("not-found")}>Powiadom mnie</Button>
+                        </div>
+                      )}
                       <Button
                         variant="ghost"
                         className="mt-4"
@@ -228,13 +360,13 @@ export function DeliveryChecker() {
 
           <div className="mt-8">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="font-semibold">Miasta z aktywna dostawa</h3>
+              <h3 className="font-semibold">Miasta z aktywną dostawą</h3>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowAllCities(!showAllCities)}
               >
-                {showAllCities ? "Pokaz mniej" : "Pokaz wszystkie"}
+                {showAllCities ? "Pokaż mniej" : "Pokaż wszystkie"}
               </Button>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -264,7 +396,7 @@ export function DeliveryChecker() {
                       </Badge>
                     ) : (
                       <Badge variant="outline">
-                        Wkrotce
+                        Wkrótce
                       </Badge>
                     )}
                   </CardContent>
@@ -279,14 +411,81 @@ export function DeliveryChecker() {
               <div>
                 <h4 className="font-semibold">Nie widzisz swojego miasta?</h4>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Stale rozszerzamy zasieg dostaw. Jesli chcesz, abysmy dostarczali do Twojej miejscowosci,
+                  Stale rozszerzamy zasięg dostaw. Jesli chcesz, abyśmy dostarczali do Twojej miejscowosci,
                   daj nam znac! Im wiecej osob z danego regionu zgłosi zainteresowanie, tym szybciej
                   uruchomimy tam dostawy.
                 </p>
-                <Button variant="outline" className="mt-4 gap-2">
-                  Zglos swoje miasto
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
+                <Dialog open={isReportDialogOpen} onOpenChange={setIsReportDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="mt-4 gap-2">
+                      Zgłoś swoje miasto
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Zgłoś miasto do dostawy</DialogTitle>
+                      <DialogDescription>
+                        Pomóż nam rozszerzyć zasięg dostaw! Podaj nazwę miasta, w którym chciałbyś otrzymywać nasze posiłki.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="city">Nazwa miasta</Label>
+                        <Input
+                          id="city"
+                          placeholder="np. Rzeszów, Kielce, Toruń..."
+                          value={reportCity}
+                          onChange={(e) => setReportCity(e.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="email">Twój email</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="twoj@email.com"
+                          value={reportEmail}
+                          onChange={(e) => setReportEmail(e.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="message">Dodatkowe informacje (opcjonalne)</Label>
+                        <Textarea
+                          id="message"
+                          placeholder="Czy jest jakieś konkretne osiedle? Ile osób mogłoby być zainteresowanych?"
+                          value={reportMessage}
+                          onChange={(e) => setReportMessage(e.target.value)}
+                          className="mt-1 resize-none"
+                          rows={3}
+                        />
+                      </div>
+                      <div className="flex gap-3 pt-4">
+                        <Button 
+                          variant="outline" 
+                          onClick={() => setIsReportDialogOpen(false)}
+                          className="flex-1"
+                        >
+                          Anuluj
+                        </Button>
+                        <Button 
+                          onClick={handleReportCitySubmit}
+                          disabled={isSubmittingReport}
+                          className="flex-1"
+                        >
+                          {isSubmittingReport ? (
+                            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                          ) : (
+                            <Send className="h-4 w-4 mr-2" />
+                          )}
+                          Wyślij zgłoszenie
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </CardContent>
           </Card>
