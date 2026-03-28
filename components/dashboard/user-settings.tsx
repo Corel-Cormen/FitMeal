@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/switch"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -37,11 +37,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { 
-  User, 
-  Settings, 
-  CreditCard, 
-  MapPin, 
+import {
+  User,
+  Settings,
+  CreditCard,
+  MapPin,
   Lock,
   Camera,
   Save,
@@ -145,8 +145,8 @@ export function UserSettings({ trigger }: UserSettingsProps) {
                   <AvatarImage src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop" />
                   <AvatarFallback className="text-2xl">AK</AvatarFallback>
                 </Avatar>
-                <Button 
-                  size="icon" 
+                <Button
+                  size="icon"
                   className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full"
                 >
                   <Camera className="h-4 w-4" />
@@ -249,7 +249,7 @@ export function UserSettings({ trigger }: UserSettingsProps) {
                   </div>
                   <Switch
                     checked={security.twoFactorEnabled}
-                    onCheckedChange={(checked) => 
+                    onCheckedChange={(checked) =>
                       setSecurity(prev => ({ ...prev, twoFactorEnabled: checked }))
                     }
                   />
@@ -312,9 +312,9 @@ export function UserSettings({ trigger }: UserSettingsProps) {
                 <CardTitle className="text-base">Preferowany czas dostawy</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Select 
+                <Select
                   value={preferences.deliveryTime}
-                  onValueChange={(value) => 
+                  onValueChange={(value) =>
                     setPreferences(prev => ({ ...prev, deliveryTime: value }))
                   }
                 >
@@ -338,7 +338,7 @@ export function UserSettings({ trigger }: UserSettingsProps) {
                   </div>
                   <Switch
                     checked={preferences.weekendDelivery}
-                    onCheckedChange={(checked) => 
+                    onCheckedChange={(checked) =>
                       setPreferences(prev => ({ ...prev, weekendDelivery: checked }))
                     }
                   />
@@ -394,7 +394,7 @@ export function UserSettings({ trigger }: UserSettingsProps) {
                   </div>
                   <Switch
                     checked={preferences.darkMode}
-                    onCheckedChange={(checked) => 
+                    onCheckedChange={(checked) =>
                       setPreferences(prev => ({ ...prev, darkMode: checked }))
                     }
                   />
@@ -410,9 +410,9 @@ export function UserSettings({ trigger }: UserSettingsProps) {
                       </p>
                     </div>
                   </div>
-                  <Select 
+                  <Select
                     value={preferences.language}
-                    onValueChange={(value) => 
+                    onValueChange={(value) =>
                       setPreferences(prev => ({ ...prev, language: value }))
                     }
                   >
@@ -447,7 +447,7 @@ export function UserSettings({ trigger }: UserSettingsProps) {
                   </div>
                   <Switch
                     checked={preferences.smsNotifications}
-                    onCheckedChange={(checked) => 
+                    onCheckedChange={(checked) =>
                       setPreferences(prev => ({ ...prev, smsNotifications: checked }))
                     }
                   />
@@ -461,7 +461,7 @@ export function UserSettings({ trigger }: UserSettingsProps) {
                   </div>
                   <Switch
                     checked={preferences.emailNotifications}
-                    onCheckedChange={(checked) => 
+                    onCheckedChange={(checked) =>
                       setPreferences(prev => ({ ...prev, emailNotifications: checked }))
                     }
                   />

@@ -212,8 +212,8 @@ export function DeliveryChecker() {
                         <Input placeholder="Twoj email" className="max-w-xs" />
                         <Button>Powiadom mnie</Button>
                       </div>
-                      <Button 
-                        variant="ghost" 
+                      <Button
+                        variant="ghost"
                         className="mt-4"
                         onClick={resetSearch}
                       >
@@ -229,8 +229,8 @@ export function DeliveryChecker() {
           <div className="mt-8">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="font-semibold">Miasta z aktywna dostawa</h3>
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 size="sm"
                 onClick={() => setShowAllCities(!showAllCities)}
               >
@@ -239,11 +239,11 @@ export function DeliveryChecker() {
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {(showAllCities ? deliveryAreas : deliveryAreas.slice(0, 6)).map((area) => (
-                <Card 
+                <Card
                   key={area.city}
                   className={`cursor-pointer transition-colors ${
-                    area.available === true 
-                      ? "hover:border-primary/50" 
+                    area.available === true
+                      ? "hover:border-primary/50"
                       : "opacity-70"
                   }`}
                   onClick={() => handleCityClick(area.city)}
@@ -279,8 +279,8 @@ export function DeliveryChecker() {
               <div>
                 <h4 className="font-semibold">Nie widzisz swojego miasta?</h4>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Stale rozszerzamy zasieg dostaw. Jesli chcesz, abysmy dostarczali do Twojej miejscowosci, 
-                  daj nam znac! Im wiecej osob z danego regionu zgłosi zainteresowanie, tym szybciej 
+                  Stale rozszerzamy zasieg dostaw. Jesli chcesz, abysmy dostarczali do Twojej miejscowosci,
+                  daj nam znac! Im wiecej osob z danego regionu zgłosi zainteresowanie, tym szybciej
                   uruchomimy tam dostawy.
                 </p>
                 <Button variant="outline" className="mt-4 gap-2">

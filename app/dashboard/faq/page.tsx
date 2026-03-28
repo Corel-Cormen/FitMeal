@@ -390,8 +390,8 @@ export default function FAQPage() {
                   {filteredQuestions.map((q, idx) => {
                     const questionId = `${q.categoryId}-${idx}`
                     return (
-                      <AccordionItem 
-                        key={idx} 
+                      <AccordionItem
+                        key={idx}
                         value={questionId}
                         className="rounded-xl border border-border bg-card shadow-sm"
                       >
@@ -405,14 +405,13 @@ export default function FAQPage() {
                         </AccordionTrigger>
                         <AccordionContent className="px-5 pb-5">
                           <p className="mb-4 text-muted-foreground">{q.a}</p>
-                          
                           {q.related && q.related.length > 0 && (
                             <div className="mb-4 rounded-lg bg-secondary/50 p-3">
                               <p className="mb-2 text-xs font-medium text-muted-foreground">Powiazane pytania:</p>
                               <div className="flex flex-wrap gap-2">
                                 {q.related.map((rel, relIdx) => (
-                                  <Badge 
-                                    key={relIdx} 
+                                  <Badge
+                                    key={relIdx}
                                     variant="outline"
                                     className="cursor-pointer hover:bg-secondary"
                                     onClick={() => setSearchQuery(rel)}
@@ -486,7 +485,7 @@ export default function FAQPage() {
                     .sort((a, b) => b.helpful - a.helpful)
                     .slice(0, 6)
                     .map((q, idx) => (
-                      <Card 
+                      <Card
                         key={idx}
                         className="cursor-pointer transition-colors hover:bg-secondary/50"
                         onClick={() => setSearchQuery(q.q)}
@@ -515,8 +514,8 @@ export default function FAQPage() {
                   {videoGuides.map((video, idx) => (
                     <Card key={idx} className="cursor-pointer overflow-hidden transition-shadow hover:shadow-md">
                       <div className="relative">
-                        <img 
-                          src={video.thumbnail} 
+                        <img
+                          src={video.thumbnail}
                           alt={video.title}
                           className="aspect-video w-full object-cover"
                         />
@@ -665,7 +664,7 @@ export default function FAQPage() {
                       <Clock className="h-4 w-4" />
                       Sredni czas odpowiedzi: {"< 2 godziny"}
                     </p>
-                    <Button 
+                    <Button
                       onClick={handleSubmitContact}
                       disabled={!contactForm.topic || !contactForm.message}
                       className="gap-2"

@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { 
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -13,12 +13,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  Plus, 
-  X, 
-  Flame, 
+import {
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  X,
+  Flame,
   Check,
   RefreshCw
 } from "lucide-react"
@@ -98,7 +98,7 @@ export function WeeklyPlanner() {
     const today = new Date()
     const startOfWeek = new Date(today)
     startOfWeek.setDate(today.getDate() - today.getDay() + 1 + weekOffset * 7)
-    
+
     return daysOfWeek.map((_, index) => {
       const date = new Date(startOfWeek)
       date.setDate(startOfWeek.getDate() + index)
@@ -132,14 +132,14 @@ export function WeeklyPlanner() {
     const dayMeals = weekPlan[day]
     let totalKcal = 0
     let totalProtein = 0
-    
+
     Object.values(dayMeals).forEach(meal => {
       if (meal) {
         totalKcal += meal.kcal
         totalProtein += meal.protein
       }
     })
-    
+
     return { totalKcal, totalProtein }
   }
 
@@ -159,14 +159,14 @@ export function WeeklyPlanner() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="icon"
               onClick={() => setWeekOffset(prev => prev - 1)}
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <Button 
+            <Button
               variant="outline"
               size="sm"
               onClick={() => setWeekOffset(0)}
@@ -174,8 +174,8 @@ export function WeeklyPlanner() {
             >
               Dzisiaj
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="icon"
               onClick={() => setWeekOffset(prev => prev + 1)}
             >
@@ -189,14 +189,14 @@ export function WeeklyPlanner() {
               const date = weekDates[index]
               const stats = getDayStats(index)
               const today = isToday(date)
-              
+
               return (
                 <button
                   key={day.short}
                   onClick={() => setSelectedDay(index)}
                   className={`flex min-w-[100px] flex-col items-center gap-1 rounded-xl border-2 p-3 transition-all ${
-                    selectedDay === index 
-                      ? "border-primary bg-primary/10" 
+                    selectedDay === index
+                      ? "border-primary bg-primary/10"
                       : today
                         ? "border-primary/50 bg-secondary/50"
                         : "border-transparent bg-secondary/30 hover:bg-secondary/50"
@@ -218,20 +218,20 @@ export function WeeklyPlanner() {
           <div className="space-y-3">
             {mealTypes.map((mealType) => {
               const meal = weekPlan[selectedDay]?.[mealType]
-              
+
               return (
-                <div 
+                <div
                   key={mealType}
                   className="flex items-center gap-4 rounded-xl border border-border/50 bg-card p-3"
                 >
                   <div className="w-24 shrink-0">
                     <span className="text-sm font-medium text-muted-foreground">{mealType}</span>
                   </div>
-                  
+
                   {meal ? (
                     <div className="flex flex-1 items-center gap-3">
-                      <img 
-                        src={meal.image} 
+                      <img
+                        src={meal.image}
                         alt={meal.name}
                         className="h-12 w-12 rounded-lg object-cover"
                       />
@@ -266,8 +266,8 @@ export function WeeklyPlanner() {
                                       meal?.id === option.id ? "border-primary bg-primary/10" : "border-border/50"
                                     }`}
                                   >
-                                    <img 
-                                      src={option.image} 
+                                    <img
+                                      src={option.image}
                                       alt={option.name}
                                       className="h-14 w-14 rounded-lg object-cover"
                                     />
@@ -286,9 +286,9 @@ export function WeeklyPlanner() {
                             </ScrollArea>
                           </DialogContent>
                         </Dialog>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
+                        <Button
+                          variant="ghost"
+                          size="icon"
                           className="h-8 w-8 text-muted-foreground hover:text-destructive"
                           onClick={() => removeMeal(selectedDay, mealType)}
                         >
@@ -299,8 +299,8 @@ export function WeeklyPlanner() {
                   ) : (
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button 
-                          variant="outline" 
+                        <Button
+                          variant="outline"
                           className="flex-1 justify-start border-dashed text-muted-foreground"
                         >
                           <Plus className="mr-2 h-4 w-4" />
@@ -322,8 +322,8 @@ export function WeeklyPlanner() {
                                 onClick={() => setMeal(selectedDay, mealType, option)}
                                 className="flex w-full items-center gap-3 rounded-xl border border-border/50 p-3 transition-all hover:border-primary/50 hover:bg-secondary/50"
                               >
-                                <img 
-                                  src={option.image} 
+                                <img
+                                  src={option.image}
                                   alt={option.name}
                                   className="h-14 w-14 rounded-lg object-cover"
                                 />

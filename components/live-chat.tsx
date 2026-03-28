@@ -86,10 +86,10 @@ export function LiveChat() {
 
     setTimeout(() => {
       setIsTyping(false)
-      
+
       const lowerText = text.toLowerCase()
       let responseText = botResponses.default
-      
+
       for (const [key, value] of Object.entries(botResponses)) {
         if (key !== "default" && lowerText.includes(key)) {
           responseText = value
@@ -99,8 +99,8 @@ export function LiveChat() {
 
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: isConnectedToAgent 
-          ? "Dziekuje za wiadomosc. Juz sprawdzam..." 
+        text: isConnectedToAgent
+          ? "Dziekuje za wiadomosc. Juz sprawdzam..."
           : responseText,
         sender: isConnectedToAgent ? "agent" : "bot",
         timestamp: new Date(),
@@ -114,11 +114,11 @@ export function LiveChat() {
 
   const handleConnectToAgent = () => {
     setIsTyping(true)
-    
+
     setTimeout(() => {
       setIsTyping(false)
       setIsConnectedToAgent(true)
-      
+
       const agentMessage: Message = {
         id: Date.now().toString(),
         text: "Czesc! Jestem Anna z zespolu wsparcia FitMeal. Przejrzalam Twoja rozmowe z botem. W czym moge Ci pomoc?",
@@ -351,7 +351,7 @@ export function LiveChatTrigger({ className }: { className?: string }) {
         <MessageCircle className="mr-2 h-4 w-4" />
         Czat na zywo
       </Button>
-      
+
       {isOpen && <LiveChatWidget onClose={() => setIsOpen(false)} />}
     </>
   )
@@ -396,10 +396,10 @@ function LiveChatWidget({ onClose }: { onClose: () => void }) {
 
     setTimeout(() => {
       setIsTyping(false)
-      
+
       const lowerText = text.toLowerCase()
       let responseText = botResponses.default
-      
+
       for (const [key, value] of Object.entries(botResponses)) {
         if (key !== "default" && lowerText.includes(key)) {
           responseText = value
@@ -424,11 +424,11 @@ function LiveChatWidget({ onClose }: { onClose: () => void }) {
 
   const handleConnectToAgent = () => {
     setIsTyping(true)
-    
+
     setTimeout(() => {
       setIsTyping(false)
       setIsConnectedToAgent(true)
-      
+  
       const agentMessage: Message = {
         id: Date.now().toString(),
         text: "Czesc! Jestem Anna z zespolu wsparcia FitMeal. Przejrzalam Twoja rozmowe z botem. W czym moge Ci pomoc?",

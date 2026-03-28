@@ -5,11 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { 
-  ChefHat, 
-  Package, 
-  Truck, 
-  MapPin, 
+import {
+  ChefHat,
+  Package,
+  Truck,
+  MapPin,
   CheckCircle2,
   Clock,
   Phone,
@@ -147,13 +147,13 @@ function LiveTrackingCard({ order }: { order: Order }) {
               const Icon = step.icon
               const isCompleted = index < currentStepIndex
               const isCurrent = index === currentStepIndex
-              
+
               return (
                 <div key={step.status} className="flex flex-col items-center">
                   <div className={`flex h-10 w-10 items-center justify-center rounded-full transition-all ${
-                    isCompleted 
-                      ? "bg-primary text-primary-foreground" 
-                      : isCurrent 
+                    isCompleted
+                      ? "bg-primary text-primary-foreground"
+                      : isCurrent
                         ? "bg-primary/20 text-primary ring-4 ring-primary/30"
                         : "bg-secondary text-muted-foreground"
                   }`}>
@@ -169,7 +169,7 @@ function LiveTrackingCard({ order }: { order: Order }) {
             })}
           </div>
           <div className="absolute left-0 right-0 top-5 -z-10 h-0.5 bg-secondary">
-            <div 
+            <div
               className="h-full bg-primary transition-all duration-500"
               style={{ width: `${(currentStepIndex / (statusSteps.length - 1)) * 100}%` }}
             />
@@ -181,8 +181,8 @@ function LiveTrackingCard({ order }: { order: Order }) {
             <div className="rounded-xl bg-secondary/50 p-4">
               <div className="flex items-center gap-4">
                 <div className="relative">
-                  <img 
-                    src={order.driver.photo} 
+                  <img
+                    src={order.driver.photo}
                     alt={order.driver.name}
                     className="h-14 w-14 rounded-full object-cover ring-2 ring-primary"
                   />

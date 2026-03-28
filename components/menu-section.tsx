@@ -79,8 +79,8 @@ const meals = [
 export function MenuSection() {
   const [activeCategory, setActiveCategory] = useState("Wszystkie")
 
-  const filteredMeals = activeCategory === "Wszystkie" 
-    ? meals 
+  const filteredMeals = activeCategory === "Wszystkie"
+    ? meals
     : meals.filter(meal => meal.category === activeCategory)
 
   return (
@@ -111,13 +111,13 @@ export function MenuSection() {
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredMeals.map((meal, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="group overflow-hidden rounded-2xl border border-border/50 bg-card transition-all hover:shadow-xl hover:shadow-primary/5"
             >
               <div className="relative aspect-[4/3] overflow-hidden">
-                <img 
-                  src={meal.image} 
+                <img
+                  src={meal.image}
                   alt={meal.name}
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
@@ -131,7 +131,6 @@ export function MenuSection() {
                   <Badge variant="secondary">{meal.category}</Badge>
                 </div>
                 <p className="mb-4 text-sm text-muted-foreground">{meal.description}</p>
-                
                 <div className="flex items-center justify-between rounded-xl bg-secondary/50 p-3">
                   <div className="flex items-center gap-1 text-sm">
                     <Flame className="h-4 w-4 text-primary" />

@@ -7,11 +7,11 @@ import { Badge } from "@/components/ui/badge"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
-import { 
-  Check, 
-  Dumbbell, 
-  Flame, 
-  Leaf, 
+import {
+  Check,
+  Dumbbell,
+  Flame,
+  Leaf,
   Zap,
   Calendar,
   CreditCard,
@@ -23,34 +23,34 @@ import {
 } from "lucide-react"
 
 const dietTypes = [
-  { 
-    id: "mass", 
-    name: "Masa", 
-    description: "Budowanie masy mięśniowej", 
+  {
+    id: "mass",
+    name: "Masa",
+    description: "Budowanie masy mięśniowej",
     icon: TrendingUp,
     kcal: "2800-3500",
     color: "text-blue-500"
   },
-  { 
-    id: "reduction", 
-    name: "Redukcja", 
-    description: "Spalanie tkanki tłuszczowej", 
+  {
+    id: "reduction",
+    name: "Redukcja",
+    description: "Spalanie tkanki tłuszczowej",
     icon: TrendingDown,
     kcal: "1800-2200",
     color: "text-orange-500"
   },
-  { 
-    id: "balance", 
-    name: "Balans", 
-    description: "Utrzymanie obecnej wagi", 
+  {
+    id: "balance",
+    name: "Balans",
+    description: "Utrzymanie obecnej wagi",
     icon: Target,
     kcal: "2200-2600",
     color: "text-green-500"
   },
-  { 
-    id: "keto", 
-    name: "Keto", 
-    description: "Dieta ketogeniczna", 
+  {
+    id: "keto",
+    name: "Keto",
+    description: "Dieta ketogeniczna",
     icon: Zap,
     kcal: "2000-2500",
     color: "text-purple-500"
@@ -121,7 +121,7 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
 
   const selectedPlanData = plans.find(p => p.id === selectedPlan)
   const selectedDurationData = durations.find(d => d.days === selectedDuration)
-  
+
   const calculatePrice = () => {
     if (!selectedPlanData || !selectedDurationData) return 0
     const basePrice = selectedPlanData.price * selectedDurationData.days
@@ -164,10 +164,10 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
             ].map((s, i) => (
               <div key={s.num} className="flex items-center">
                 <div className="flex flex-col items-center gap-2">
-                  <div 
+                  <div
                     className={`flex h-10 w-10 items-center justify-center rounded-full transition-all ${
-                      step >= s.num 
-                        ? "bg-primary text-primary-foreground" 
+                      step >= s.num
+                        ? "bg-primary text-primary-foreground"
                         : "bg-secondary text-muted-foreground"
                     }`}
                   >
@@ -202,8 +202,8 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
                     key={diet.id}
                     onClick={() => setSelectedDiet(diet.id)}
                     className={`flex cursor-pointer items-start gap-4 rounded-xl border-2 p-4 transition-all ${
-                      selectedDiet === diet.id 
-                        ? "border-primary bg-primary/5" 
+                      selectedDiet === diet.id
+                        ? "border-primary bg-primary/5"
                         : "border-border/50 hover:border-primary/30"
                     }`}
                   >
@@ -228,7 +228,7 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
               <div className="mt-6 rounded-xl bg-secondary/50 p-4">
                 <Label className="text-sm font-medium">Docelowe kalorie dziennie</Label>
                 <div className="mt-4 px-2">
-                  <Slider 
+                  <Slider
                     value={kcalTarget}
                     onValueChange={setKcalTarget}
                     min={1500}
@@ -259,8 +259,8 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
                     key={plan.id}
                     onClick={() => setSelectedPlan(plan.id)}
                     className={`relative flex cursor-pointer flex-col rounded-xl border-2 p-4 transition-all ${
-                      selectedPlan === plan.id 
-                        ? "border-primary bg-primary/5" 
+                      selectedPlan === plan.id
+                        ? "border-primary bg-primary/5"
                         : "border-border/50 hover:border-primary/30"
                     }`}
                   >
@@ -302,8 +302,8 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
             <h3 className="text-lg font-semibold text-foreground">
               Wybierz okres
             </h3>
-            <RadioGroup 
-              value={selectedDuration.toString()} 
+            <RadioGroup
+              value={selectedDuration.toString()}
               onValueChange={(v) => setSelectedDuration(parseInt(v))}
             >
               <div className="grid gap-3 sm:grid-cols-2">
@@ -312,8 +312,8 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
                     key={duration.days}
                     onClick={() => setSelectedDuration(duration.days)}
                     className={`flex cursor-pointer items-center justify-between rounded-xl border-2 p-4 transition-all ${
-                      selectedDuration === duration.days 
-                        ? "border-primary bg-primary/5" 
+                      selectedDuration === duration.days
+                        ? "border-primary bg-primary/5"
                         : "border-border/50 hover:border-primary/30"
                     }`}
                   >
@@ -413,8 +413,8 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
               </div>
             </div>
 
-            <Button 
-              className="w-full" 
+            <Button
+              className="w-full"
               size="lg"
               onClick={onPurchase}
             >
@@ -433,9 +433,9 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
           ) : (
             <div />
           )}
-          
+
           {step < 4 && (
-            <Button 
+            <Button
               onClick={() => setStep(step + 1)}
               disabled={!canProceed()}
             >

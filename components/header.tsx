@@ -40,10 +40,10 @@ export function Header() {
 
         <div className="hidden items-center gap-3 md:flex">
           <Button variant="ghost" asChild>
-            <Link href="#login">Zaloguj się</Link>
+            <Link href="/?mode=login#login">Zaloguj się</Link>
           </Button>
           <Button asChild>
-            <Link href="#register">Rozpocznij</Link>
+            <Link href="/?mode=register#login">Rozpocznij</Link>
           </Button>
         </div>
 
@@ -72,10 +72,10 @@ export function Header() {
             </Link>
             <div className="flex flex-col gap-2 pt-4">
               <Button variant="outline" asChild>
-                <Link href="#login">Zaloguj się</Link>
+                <Link href="/?mode=login#login">Zaloguj się</Link>
               </Button>
               <Button asChild>
-                <Link href="#register">Rozpocznij</Link>
+                <Link href="/?mode=register#login">Rozpocznij</Link>
               </Button>
             </div>
           </nav>

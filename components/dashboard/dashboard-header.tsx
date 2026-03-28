@@ -102,7 +102,7 @@ export function DashboardHeader({
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <UserSettings 
+                  <UserSettings
                     trigger={
                       <button className="flex w-full items-center px-2 py-1.5 text-sm">
                         <User className="mr-2 h-4 w-4" />
@@ -112,7 +112,7 @@ export function DashboardHeader({
                   />
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <UserSettings 
+                  <UserSettings
                     trigger={
                       <button className="flex w-full items-center px-2 py-1.5 text-sm">
                         <Settings className="mr-2 h-4 w-4" />
@@ -122,7 +122,7 @@ export function DashboardHeader({
                   />
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <HelpCenter 
+                  <HelpCenter
                     trigger={
                       <button className="flex w-full items-center px-2 py-1.5 text-sm">
                         <HelpCircle className="mr-2 h-4 w-4" />

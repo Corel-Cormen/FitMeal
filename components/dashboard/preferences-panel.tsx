@@ -103,7 +103,7 @@ export function PreferencesPanel() {
     setExcludedIngredients(prev => prev.filter(i => i !== ingredient))
   }
 
-  const filteredIngredients = availableIngredients.filter(ing => 
+  const filteredIngredients = availableIngredients.filter(ing =>
     ing.toLowerCase().includes(searchQuery.toLowerCase()) &&
     !favoriteIngredients.includes(ing) &&
     !excludedIngredients.includes(ing)
@@ -144,9 +144,8 @@ export function PreferencesPanel() {
                     keto: { title: "Keto", desc: "Nisko weglowodanowa" },
                     highProtein: { title: "High Protein", desc: "Wysoko bialkowa" },
                   }
-                  
                   return (
-                    <div 
+                    <div
                       key={key}
                       className={`flex items-center justify-between rounded-xl border p-4 transition-all ${
                         value ? "border-primary bg-primary/5" : "border-border/50"
@@ -163,10 +162,10 @@ export function PreferencesPanel() {
                           <p className="text-xs text-muted-foreground">{labels[key].desc}</p>
                         </div>
                       </div>
-                      <Switch 
+                      <Switch
                         id={key}
                         checked={value}
-                        onCheckedChange={(checked) => 
+                        onCheckedChange={(checked) =>
                           setDietPreferences(prev => ({ ...prev, [key]: checked }))
                         }
                       />
@@ -193,14 +192,14 @@ export function PreferencesPanel() {
                 {availableAllergens.map((allergen) => {
                   const isExcluded = excludedAllergens.includes(allergen.id)
                   const Icon = allergen.icon
-                  
+
                   return (
                     <button
                       key={allergen.id}
                       onClick={() => toggleAllergen(allergen.id)}
                       className={`flex items-center gap-3 rounded-xl border p-4 transition-all ${
-                        isExcluded 
-                          ? "border-destructive/50 bg-destructive/10" 
+                        isExcluded
+                          ? "border-destructive/50 bg-destructive/10"
                           : "border-border/50 hover:border-border hover:bg-secondary/50"
                       }`}
                     >
@@ -243,7 +242,7 @@ export function PreferencesPanel() {
                           Wybierz skladniki, ktore chcesz czesciej widziec w swoich posilkach
                         </DialogDescription>
                       </DialogHeader>
-                      <Input 
+                      <Input
                         placeholder="Szukaj skladnika..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -267,14 +266,14 @@ export function PreferencesPanel() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {favoriteIngredients.map((ingredient) => (
-                    <Badge 
+                    <Badge
                       key={ingredient}
                       variant="secondary"
                       className="gap-1 bg-primary/10 text-primary hover:bg-primary/20"
                     >
                       <Heart className="h-3 w-3" />
                       {ingredient}
-                      <button 
+                      <button
                         onClick={() => removeFavorite(ingredient)}
                         className="ml-1 hover:text-destructive"
                       >
@@ -307,7 +306,7 @@ export function PreferencesPanel() {
                           Wybierz skladniki, ktorych nie chcesz widziec w swoich posilkach
                         </DialogDescription>
                       </DialogHeader>
-                      <Input 
+                      <Input
                         placeholder="Szukaj skladnika..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -331,14 +330,14 @@ export function PreferencesPanel() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {excludedIngredients.map((ingredient) => (
-                    <Badge 
+                    <Badge
                       key={ingredient}
                       variant="secondary"
                       className="gap-1 bg-destructive/10 text-destructive hover:bg-destructive/20"
                     >
                       <Ban className="h-3 w-3" />
                       {ingredient}
-                      <button 
+                      <button
                         onClick={() => removeExcluded(ingredient)}
                         className="ml-1 hover:text-foreground"
                       >

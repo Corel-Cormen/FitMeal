@@ -65,11 +65,11 @@ export function PricingSection() {
 
         <div className="grid gap-8 lg:grid-cols-3">
           {plans.map((plan, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className={`relative rounded-2xl border bg-card p-8 transition-all ${
-                plan.popular 
-                  ? "border-primary shadow-xl shadow-primary/10 scale-105" 
+                plan.popular
+                  ? "border-primary shadow-xl shadow-primary/10 scale-105"
                   : "border-border/50 hover:border-primary/30 hover:shadow-lg"
               }`}
             >

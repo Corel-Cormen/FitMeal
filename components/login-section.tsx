@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -13,14 +14,45 @@ export function LoginSection() {
   const [password, setPassword] = useState("")
   const [name, setName] = useState("")
 
+  const router = useRouter()
+
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const updateMode = () => {
+      const hash = window.location.hash
+      if (hash === "#register") {
+        setIsLogin(false)
+      } else if (hash === "#login") {
+        setIsLogin(true)
+      }
+    }
+
+    const mode = searchParams?.get("mode")
+    if (mode === "register") {
+      setIsLogin(false)
+    } else if (mode === "login") {
+      setIsLogin(true)
+    } else {
+      updateMode()
+    }
+
+    window.addEventListener("hashchange", updateMode)
+
+    return () => {
+      window.removeEventListener("hashchange", updateMode)
+    }
+  }, [searchParams])
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission
-    console.log("[v0] Form submitted:", { email, password, name, isLogin })
+    console.log("Form submitted:", { email, password, name, isLogin })
+    router.push("/dashboard")
   }
 
   return (
     <section id="login" className="bg-secondary/30 py-20">
+      <div id="register" className="h-0 overflow-hidden" />
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-md">
           <Card className="border-border/50 shadow-xl">
@@ -29,7 +61,7 @@ export function LoginSection() {
                 {isLogin ? "Zaloguj się" : "Zarejestruj się"}
               </CardTitle>
               <CardDescription>
-                {isLogin 
+                {isLogin
                   ? "Witaj ponownie! Zaloguj się do swojego konta."
                   : "Stwórz konto i zacznij zamawiać zdrowe posiłki."
                 }
@@ -50,7 +82,6 @@ export function LoginSection() {
                     />
                   </div>
                 )}
-                
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
@@ -138,8 +169,8 @@ export function LoginSection() {
                 {isLogin ? (
                   <p className="text-muted-foreground">
                     Nie masz konta?{" "}
-                    <button 
-                      onClick={() => setIsLogin(false)} 
+                    <button
+                      onClick={() => setIsLogin(false)}
                       className="font-medium text-primary hover:underline"
                     >
                       Zarejestruj się
@@ -148,8 +179,8 @@ export function LoginSection() {
                 ) : (
                   <p className="text-muted-foreground">
                     Masz już konto?{" "}
-                    <button 
-                      onClick={() => setIsLogin(true)} 
+                    <button
+                      onClick={() => setIsLogin(true)}
                       className="font-medium text-primary hover:underline"
                     >
                       Zaloguj się

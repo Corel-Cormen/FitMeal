@@ -182,8 +182,8 @@ export function FAQSection() {
 
                 <Accordion type="single" collapsible className="space-y-3">
                   {category.questions.map((q, idx) => (
-                    <AccordionItem 
-                      key={idx} 
+                    <AccordionItem
+                      key={idx}
                       value={`${category.category}-${idx}`}
                       className="rounded-xl border border-border bg-card px-4 shadow-sm"
                     >
@@ -205,8 +205,8 @@ export function FAQSection() {
             <p className="text-muted-foreground">
               Nie znaleziono wynikow dla &ldquo;{searchQuery}&rdquo;
             </p>
-            <Button 
-              variant="link" 
+            <Button
+              variant="link"
               onClick={() => setSearchQuery("")}
               className="mt-2"
             >

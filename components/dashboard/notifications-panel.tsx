@@ -16,13 +16,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { 
-  Bell, 
-  Check, 
+import {
+  Bell,
+  Check,
   CheckCheck,
-  Truck, 
-  ChefHat, 
-  Package, 
+  Truck,
+  ChefHat,
+  Package,
   MessageCircle,
   Settings,
   Trash2,
@@ -123,7 +123,7 @@ export function NotificationsPanel({ trigger }: NotificationsPanelProps) {
   const unreadCount = notifications.filter(n => !n.read).length
 
   const markAsRead = (id: string) => {
-    setNotifications(prev => 
+    setNotifications(prev =>
       prev.map(n => n.id === id ? { ...n, read: true } : n)
     )
   }
@@ -141,7 +141,7 @@ export function NotificationsPanel({ trigger }: NotificationsPanelProps) {
   }
 
   const toggleSetting = (id: string) => {
-    setSettings(prev => 
+    setSettings(prev =>
       prev.map(s => s.id === id ? { ...s, enabled: !s.enabled } : s)
     )
   }
@@ -186,18 +186,18 @@ export function NotificationsPanel({ trigger }: NotificationsPanelProps) {
             {notifications.length > 0 ? (
               <>
                 <div className="mb-4 flex items-center justify-between">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={markAllAsRead}
                     disabled={unreadCount === 0}
                   >
                     <CheckCheck className="mr-2 h-4 w-4" />
                     Oznacz wszystkie
                   </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={clearAll}
                     className="text-muted-foreground hover:text-destructive"
                   >
@@ -212,8 +212,8 @@ export function NotificationsPanel({ trigger }: NotificationsPanelProps) {
                       <div
                         key={notification.id}
                         className={`group relative rounded-xl border p-4 transition-all ${
-                          notification.read 
-                            ? "border-border/50 bg-background" 
+                          notification.read
+                            ? "border-border/50 bg-background"
                             : "border-primary/30 bg-primary/5"
                         }`}
                       >

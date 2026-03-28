@@ -48,8 +48,8 @@ export function FeaturesSection() {
 
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="group rounded-2xl border border-border/50 bg-card p-6 transition-all hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
             >
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
