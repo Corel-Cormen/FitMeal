@@ -17,13 +17,13 @@ export function Footer() {
               Zdrowe posiłki dla aktywnych ludzi. Catering sportowy z dostawą pod Twoje drzwi.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="text-muted-foreground transition-colors hover:text-primary">
+              <a href="https://www.instagram.com/" className="text-muted-foreground transition-colors hover:text-primary">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="#" className="text-muted-foreground transition-colors hover:text-primary">
+              <a href="https://www.facebook.com/" className="text-muted-foreground transition-colors hover:text-primary">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="text-muted-foreground transition-colors hover:text-primary">
+              <a href="https://www.youtube.com/" className="text-muted-foreground transition-colors hover:text-primary">
                 <Youtube className="h-5 w-5" />
               </a>
             </div>
@@ -35,7 +35,8 @@ export function Footer() {
               <li><Link href="#oferta" className="text-muted-foreground hover:text-primary">Oferta</Link></li>
               <li><Link href="#menu" className="text-muted-foreground hover:text-primary">Menu</Link></li>
               <li><Link href="#cennik" className="text-muted-foreground hover:text-primary">Cennik</Link></li>
-              <li><Link href="#login" className="text-muted-foreground hover:text-primary">Logowanie</Link></li>
+              <li><Link href="#sprawdz-dostepnosc" className="text-muted-foreground hover:text-primary">Zasięg dostaw</Link></li>
+              <li><Link href="/login" className="text-muted-foreground hover:text-primary">Logowanie</Link></li>
             </ul>
           </div>
 
@@ -43,9 +44,7 @@ export function Footer() {
             <h4 className="mb-4 font-semibold text-foreground">Informacje</h4>
             <ul className="space-y-2 text-sm">
               <li><Link href="#" className="text-muted-foreground hover:text-primary">O nas</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary">Blog</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary">FAQ</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary">Kontakt</Link></li>
+              <li><Link href="#faq" className="text-muted-foreground hover:text-primary">Pomoc</Link></li>
             </ul>
           </div>
 
@@ -54,8 +53,8 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>kontakt@fitmeal.pl</li>
               <li>+48 123 456 789</li>
-              <li>ul. Sportowa 15</li>
-              <li>00-001 Warszawa</li>
+              <li>ul. Emilii Plater 49</li>
+              <li>00-125 Warszawa</li>
             </ul>
           </div>
         </div>

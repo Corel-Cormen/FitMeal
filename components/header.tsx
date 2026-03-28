@@ -43,10 +43,10 @@ export function Header() {
 
         <div className="hidden items-center gap-3 md:flex">
           <Button variant="ghost" asChild>
-            <Link href="/?mode=login#login">Zaloguj się</Link>
+            <Link href="/login">Zaloguj się</Link>
           </Button>
           <Button asChild>
-            <Link href="/?mode=register#login">Rozpocznij</Link>
+            <Link href="/login?mode=register">Rozpocznij</Link>
           </Button>
         </div>
 
@@ -61,24 +61,27 @@ export function Header() {
       {mobileMenuOpen && (
         <div className="border-t md:hidden">
           <nav className="container mx-auto flex flex-col gap-4 px-4 py-4">
-            <Link href="#oferta" className="text-sm font-medium text-muted-foreground">
+            <Link href="#oferta" className="text-sm font-medium text-muted-foreground" onClick={() => setMobileMenuOpen(false)}>
               Oferta
             </Link>
-            <Link href="#jak-dziala" className="text-sm font-medium text-muted-foreground">
-              Jak to działa
-            </Link>
-            <Link href="#menu" className="text-sm font-medium text-muted-foreground">
+            <Link href="#menu" className="text-sm font-medium text-muted-foreground" onClick={() => setMobileMenuOpen(false)}>
               Menu
             </Link>
-            <Link href="#cennik" className="text-sm font-medium text-muted-foreground">
+            <Link href="#cennik" className="text-sm font-medium text-muted-foreground" onClick={() => setMobileMenuOpen(false)}>
               Cennik
             </Link>
+            <Link href="#sprawdz-dostepnosc" className="text-sm font-medium text-muted-foreground" onClick={() => setMobileMenuOpen(false)}>
+              Zasięg dostaw
+            </Link>
+            <Link href="#faq" className="text-sm font-medium text-muted-foreground" onClick={() => setMobileMenuOpen(false)}>
+              Pomoc
+            </Link>
             <div className="flex flex-col gap-2 pt-4">
-              <Button variant="outline" asChild>
-                <Link href="/?mode=login#login">Zaloguj się</Link>
+              <Button variant="outline" asChild onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/login">Zaloguj się</Link>
               </Button>
-              <Button asChild>
-                <Link href="/?mode=register#login">Rozpocznij</Link>
+              <Button asChild onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/login?mode=register">Rozpocznij</Link>
               </Button>
             </div>
           </nav>

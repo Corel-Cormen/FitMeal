@@ -23,24 +23,24 @@ import { LiveChatTrigger } from "./live-chat"
 
 const faqData = [
   {
-    category: "Zamowienia i dostawa",
+    category: "Zamówienia i dostawa",
     icon: Truck,
     questions: [
       {
-        q: "Jak moge zlozyc zamowienie?",
+        q: "Jak mogę złożyć zamówienie?",
         a: "Wybierz plan dietetyczny, dostosuj go do swoich potrzeb (kalorie, preferencje), podaj adres dostawy i dokonaj platnosci. To zajmie tylko kilka minut!"
       },
       {
-        q: "O ktorej godzinie dostarczacie posilki?",
-        a: "Dostawy realizujemy codziennie w godzinach 6:00-9:00 rano. Mozesz ustawic preferowane okno czasowe w swoim profilu."
+        q: "O której godzinie dostarczacie posiłki?",
+        a: "Dostawy realizujemy codziennie w godzinach 6:00-9:00 rano. Możesz ustawić preferowane okno czasowe w swoim profilu."
       },
       {
-        q: "Czy moge zmienic menu po zlozeniu zamowienia?",
-        a: "Tak! Zmiany mozesz wprowadzac do godziny 18:00 dnia poprzedzajacego dostawe przez panel uzytkownika."
+        q: "Czy mogę zmienić menu po złozeniu zamówienia?",
+        a: "Tak! Zmiany mozesz wprowadzac do godziny 18:00 dnia poprzedzajacego dostawe przez panel użytkownika."
       },
       {
         q: "W jakich miastach dostarczacie?",
-        a: "Obecnie dostarczamy w Warszawie, Krakowie, Wroclawiu, Poznaniu i Gdansku. Stale rozszerzamy zasieg!"
+        a: "Obecnie dostarczamy w Warszawie, Krakowie, Wrocławiu, Poznaniu i Gdańsku. Stale rozszerzamy zasięg!"
       },
     ]
   },
@@ -50,41 +50,41 @@ const faqData = [
     questions: [
       {
         q: "Jakie typy diet oferujecie?",
-        a: "Oferujemy 4 glowne typy: Masa (budowanie miesni), Redukcja (odchudzanie), Balans (utrzymanie wagi) i Keto (dieta ketogeniczna)."
+        a: "Oferujemy 4 główne typy: Masa (budowanie mięsni), Redukcja (odchudzanie), Balans (utrzymanie wagi) i Keto (dieta ketogeniczna)."
       },
       {
-        q: "Czy uwzgledniacie alergie pokarmowe?",
-        a: "Tak! W panelu preferencji mozesz oznaczyc wszystkie alergeny i skladniki, ktorych chcesz unikac. Nasz system automatycznie dobierze odpowiednie posilki."
+        q: "Czy uwzględniacie alergie pokarmowe?",
+        a: "Tak! W panelu preferencji możesz oznaczyć wszystkie alergeny i składniki, których chcesz unikać. Nasz system automatycznie dobierze odpowiednie posilki."
       },
       {
-        q: "Czy posilki sa swieze?",
-        a: "Wszystkie posilki przygotowujemy codziennie rano z swiezych, lokalnych skladnikow. Nie uzywamy konserwantow ani sztucznych dodatkow."
+        q: "Czy posiłki są swieże?",
+        a: "Wszystkie posiłki przygotowujemy codziennie rano z świeżych, lokalnych składników. Nie używamy konserwantów ani sztucznych dodatków."
       },
       {
-        q: "Ile kalorii maja posilki?",
-        a: "Mozesz wybrac dzienny limit od 1200 do 4000 kcal. Kazdy posilek ma szczegolowo wyliczone makroskładniki (bialko, weglowodany, tluszcze)."
+        q: "Ile kalorii mają posiłki?",
+        a: "Możesz wybrać dzienny limit od 1200 do 4000 kcal. Każdy posiłek ma szczegołowo wyliczone makroskładniki (białko, węglowodany, tłuszcze)."
       },
     ]
   },
   {
-    category: "Platnosci i subskrypcje",
+    category: "Płatności i subskrypcje",
     icon: CreditCard,
     questions: [
       {
-        q: "Jakie metody platnosci akceptujecie?",
-        a: "Akceptujemy karty (Visa, Mastercard), BLIK, przelewy online oraz platnosc przy odbiorze. Oferujemy tez raty 0%."
+        q: "Jakie metody płatności akceptujecie?",
+        a: "Akceptujemy karty (Visa, Mastercard), BLIK, przelewy online oraz płatność przy odbiorze. Oferujemy też raty 0%."
       },
       {
-        q: "Czy moge zrezygnowac z subskrypcji?",
-        a: "Tak, mozesz anulowac subskrypcje w dowolnym momencie. Zwrot za niewykorzystany okres zostanie przelany w ciagu 5 dni roboczych."
+        q: "Czy mogę zrezygnować z subskrypcji?",
+        a: "Tak, mozesz anulować subskrypcję w dowolnym momencie. Zwrot za niewykorzystany okres zostanie przelany w ciagu 5 dni roboczych."
       },
       {
-        q: "Czy sa rabaty przy dluzszych subskrypcjach?",
-        a: "Tak! Przy 2-miesięcznej subskrypcji otrzymasz 10% rabatu, a przy 3-miesiecznej az 15% znizki."
+        q: "Czy są rabaty przy dłuzszych subskrypcjach?",
+        a: "Tak! Przy 2-miesięcznej subskrypcji otrzymasz 10% rabatu, a przy 3-miesiecznej aż 15% zniżki."
       },
       {
         q: "Jak otrzymam fakture?",
-        a: "Faktura VAT jest automatycznie generowana i wysylana na Twoj email po kazdej platnosci."
+        a: "Faktura VAT jest automatycznie generowana i wysylana na Twój email po każdej płatności."
       },
     ]
   },
@@ -93,20 +93,20 @@ const faqData = [
     icon: Settings,
     questions: [
       {
-        q: "Jak zmienic adres dostawy?",
-        a: "W panelu uzytkownika wejdz w Ustawienia > Dostawa. Mozesz dodac do 3 adresow (dom, praca, silownia) i wybierac miedzy nimi."
+        q: "Jak zmienić adres dostawy?",
+        a: "W panelu użytkownika wejdz w Ustawienia > Dostawa. Mozesz dodać do 3 adresów (dom, praca, silownia) i wybierać miedzy nimi."
       },
       {
-        q: "Jak wstrzymac dostawy na czas urlopu?",
-        a: "W planie tygodniowym mozesz oznaczyc dni bez dostawy. Mozesz tez tymczasowo zawiesic subskrypcje w ustawieniach."
+        q: "Jak wstrzymać dostawy na czas urlopu?",
+        a: "W planie tygodniowym mozesz oznaczyc dni bez dostawy. Możesz tez tymczasowo zawiesić subskrypcję w ustawieniach."
       },
       {
-        q: "Czy moge zmienic typ diety w trakcie subskrypcji?",
-        a: "Tak! Mozesz zmienic typ diety, liczbe kalorii i preferencje w dowolnym momencie. Zmiany wejda w zycie od nastepnej dostawy."
+        q: "Czy mogę zmienić typ diety w trakcie subskrypcji?",
+        a: "Tak! Mozesz zmienic typ diety, liczbe kalorii i preferencje w dowolnym momencie. Zmiany wejdą w życie od nastepnej dostawy."
       },
       {
-        q: "Jak usunac konto?",
-        a: "Mozesz usunac konto w Ustawieniach > Opcje. Pamietaj, ze wszystkie dane zostana trwale usuniete."
+        q: "Jak usunąć konto?",
+        a: "Możesz usunać konto w Ustawieniach > Opcje. Pamietaj, ze wszystkie dane zostana trwale usunięte."
       },
     ]
   },
@@ -131,10 +131,10 @@ export function FAQSection() {
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold text-foreground sm:text-4xl">
-            Czesto zadawane <span className="text-primary">pytania</span>
+            Często zadawane <span className="text-primary">pytania</span>
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Znajdz odpowiedzi na najczestsze pytania. Jesli nie znajdziesz odpowiedzi, skontaktuj sie z nami!
+            Znajdź odpowiedzi na najczęstsze pytania. Jeśli nie znajdziesz odpowiedzi, skontaktuj się z nami!
           </p>
 
           <div className="relative mt-8">
@@ -203,23 +203,23 @@ export function FAQSection() {
         {filteredData.length === 0 && (
           <div className="mx-auto mt-12 max-w-md text-center">
             <p className="text-muted-foreground">
-              Nie znaleziono wynikow dla &ldquo;{searchQuery}&rdquo;
+              Nie znaleziono wyników dla &ldquo;{searchQuery}&rdquo;
             </p>
             <Button
               variant="link"
               onClick={() => setSearchQuery("")}
               className="mt-2"
             >
-              Wyczysc wyszukiwanie
+              Wyczyść wyszukiwanie
             </Button>
           </div>
         )}
 
         <Card className="mx-auto mt-16 max-w-2xl bg-primary/5 border-primary/20">
           <CardHeader className="text-center">
-            <CardTitle>Nie znalazles odpowiedzi?</CardTitle>
+            <CardTitle>Nie znalazłes odpowiedzi?</CardTitle>
             <CardDescription>
-              Skontaktuj sie z nami - chetnie pomozemy!
+              Skontaktuj się z nami - chętnie pomożemy!
             </CardDescription>
           </CardHeader>
           <CardContent>

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -30,7 +31,7 @@ const deliveryAreas = [
   { city: "Gdańsk", available: true, deliveryTime: "6:00-9:00", zones: ["Śródmiescie", "Wrzeszcz", "Oliwa", "Przymorze", "Zaspa"] },
   { city: "Gdynia", available: true, deliveryTime: "6:00-9:00", zones: ["Śródmiescie", "Orłowo", "Redłowo", "Wielki Kack"] },
   { city: "Sopot", available: true, deliveryTime: "6:00-9:00", zones: ["Caly obszar"] },
-  { city: "Łodź", available: true, deliveryTime: "6:30-9:30", zones: ["Śródmiescie", "Polesie", "Bałuty", "Widzew"] },
+  { city: "Łódź", available: true, deliveryTime: "6:30-9:30", zones: ["Śródmiescie", "Polesie", "Bałuty", "Widzew"] },
   { city: "Katowice", available: "soon", deliveryTime: "Wkrótce", zones: [] },
   { city: "Szczecin", available: "soon", deliveryTime: "Wkrótce", zones: [] },
   { city: "Lublin", available: "soon", deliveryTime: "Wkrótce", zones: [] },
@@ -281,10 +282,10 @@ export function DeliveryChecker() {
                             </div>
                           )}
                           <Button className="mt-6 gap-2" asChild>
-                            <a href="#login">
+                            <Link href="/login?mode=register">
                               Zamów teraz
                               <ChevronRight className="h-4 w-4" />
-                            </a>
+                            </Link>
                           </Button>
                         </>
                       ) : (
@@ -326,7 +327,7 @@ export function DeliveryChecker() {
                         Jeszcze nie dostarczamy do {searchValue}
                       </h3>
                       <p className="mt-2 text-amber-700">
-                        Stale rozszerzamy zasięg dostaw. Zostaw swój email, a powiadomimy Cię gdy zaczniemy dostarczac w Twojej okolicy!
+                        Stale rozszerzamy zasięg dostaw. Zostaw swój email, a powiadomimy Cię gdy zaczniemy dostarczać w Twojej okolicy!
                       </p>
                       {sentEmails["not-found"] ? (
                         <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
@@ -412,7 +413,7 @@ export function DeliveryChecker() {
                 <h4 className="font-semibold">Nie widzisz swojego miasta?</h4>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Stale rozszerzamy zasięg dostaw. Jesli chcesz, abyśmy dostarczali do Twojej miejscowosci,
-                  daj nam znac! Im wiecej osob z danego regionu zgłosi zainteresowanie, tym szybciej
+                  daj nam znać! Im wiecej osób z danego regionu zgłosi zainteresowanie, tym szybciej
                   uruchomimy tam dostawy.
                 </p>
                 <Dialog open={isReportDialogOpen} onOpenChange={setIsReportDialogOpen}>

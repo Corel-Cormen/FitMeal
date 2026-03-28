@@ -107,7 +107,7 @@ export function PricingSection() {
                 variant={plan.popular ? "default" : "outline"}
                 asChild
               >
-                <Link href="#register">Wybierz plan</Link>
+                <Link href="/login">Wybierz plan</Link>
               </Button>
             </div>
           ))}

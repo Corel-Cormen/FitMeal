@@ -5,7 +5,6 @@ import { MenuSection } from "@/components/menu-section"
 import { PricingSection } from "@/components/pricing-section"
 import { DeliveryChecker } from "@/components/delivery-checker"
 import { FAQSection } from "@/components/faq-section"
-import { LoginSection } from "@/components/login-section"
 import { Footer } from "@/components/footer"
 import { LiveChat } from "@/components/live-chat"
 
@@ -20,7 +19,6 @@ export default function Home() {
         <PricingSection />
         <DeliveryChecker />
         <FAQSection />
-        <LoginSection />
       </main>
       <Footer />
       <LiveChat />
