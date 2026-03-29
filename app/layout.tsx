@@ -3,7 +3,7 @@ import { Inter, Montserrat } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { Toaster } from 'sonner'
 import { ThemeProvider } from '@/components/theme-provider'
-import { LiveChatProvider } from '@/components/live-chat'
+import { LiveChatProvider, LiveChat } from '@/components/live-chat'
 import './globals.css'
 
 const inter = Inter({
@@ -50,6 +50,7 @@ export default function RootLayout({
           <LiveChatProvider>
             {children}
             <Toaster />
+            <LiveChat />
           </LiveChatProvider>
         </ThemeProvider>
         <Analytics />

@@ -1,12 +1,28 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
+import { Input } from "@/components/ui/input"
+import { AlertCircle } from "lucide-react"
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { toast } from "sonner"
 import {
   Check,
   Dumbbell,
@@ -19,7 +35,9 @@ import {
   Sparkles,
   Target,
   TrendingDown,
-  TrendingUp
+  TrendingUp,
+  Loader2,
+  User
 } from "lucide-react"
 
 const dietTypes = [
@@ -108,16 +126,57 @@ const durations = [
   { days: 90, label: "3 miesiące", discount: 15 },
 ]
 
+const getKcalRange = (kcalString: string) => {
+  const [min, max] = kcalString.split('-').map(Number)
+  return { min, max }
+}
+
 interface PurchaseDietPanelProps {
   onPurchase: () => void
 }
 
 export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
+  const router = useRouter()
   const [step, setStep] = useState(1)
   const [selectedDiet, setSelectedDiet] = useState("")
   const [selectedPlan, setSelectedPlan] = useState("")
   const [selectedDuration, setSelectedDuration] = useState(14)
   const [kcalTarget, setKcalTarget] = useState([2500])
+  const [discountCode, setDiscountCode] = useState("")
+  const [appliedDiscount, setAppliedDiscount] = useState(0)
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false)
+
+  // User data
+  const [userAddress, setUserAddress] = useState("")
+  const [deliveryTime, setDeliveryTime] = useState("08:00-10:00")
+  const [userPhone, setUserPhone] = useState("")
+  const [userName, setUserName] = useState("")
+
+  const selectedDietData = dietTypes.find(d => d.id === selectedDiet)
+  const kcalRange = selectedDietData ? getKcalRange(selectedDietData.kcal) : { min: 1500, max: 4000 }
+  const defaultKcal = selectedDietData ? Math.floor((kcalRange.min + kcalRange.max) / 2) : 2500
+
+  useEffect(() => {
+    if (selectedDietData) {
+      setKcalTarget([defaultKcal])
+    }
+  }, [selectedDiet])
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const profileDetails = localStorage.getItem("fitmeal_profileDetails")
+      if (profileDetails) {
+        try {
+          const profile = JSON.parse(profileDetails)
+          setUserName(`${profile.firstName} ${profile.lastName}`)
+          setUserPhone(profile.phone)
+          setUserAddress(`${profile.address.street} ${profile.address.houseNumber}, ${profile.address.postalCode} ${profile.address.city}`)
+        } catch (e) {
+          console.error("Error parsing profile:", e)
+        }
+      }
+    }
+  }, [])
 
   const selectedPlanData = plans.find(p => p.id === selectedPlan)
   const selectedDurationData = durations.find(d => d.days === selectedDuration)
@@ -125,27 +184,47 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
   const calculatePrice = () => {
     if (!selectedPlanData || !selectedDurationData) return 0
     const basePrice = selectedPlanData.price * selectedDurationData.days
-    const discount = (basePrice * selectedDurationData.discount) / 100
-    return basePrice - discount
+    const durationDiscount = (basePrice * selectedDurationData.discount) / 100
+    const codeDiscount = (basePrice * appliedDiscount) / 100
+    return basePrice - durationDiscount - codeDiscount
   }
 
   const canProceed = () => {
     if (step === 1) return selectedDiet !== ""
     if (step === 2) return selectedPlan !== ""
     if (step === 3) return selectedDuration > 0
+    if (step === 4) return true
     return false
+  }
+
+  const applyDiscount = () => {
+    if (discountCode.toUpperCase() === "RABAT10") {
+      setAppliedDiscount(10)
+      toast.success("Kod rabatowy zastosowany! Otrzymujesz dodatkowe -10% rabatu.", { style: { background: "#10b981", color: "white" } })
+    } else {
+      toast.error("Nieprawidłowy kod rabatowy.", { style: { background: "#ef4444", color: "white" } })
+    }
+  }
+
+  const handlePayment = () => {
+    setIsProcessingPayment(true)
+    setTimeout(() => {
+      toast.success("Płatność zakończona pomyślnie! Witamy w FitMeal!", { style: { background: "#10b981", color: "white" } })
+      setIsProcessingPayment(false)
+      router.push("/dashboard")
+    }, 5000)
   }
 
   return (
     <Card className="border-border/50 overflow-hidden">
       <CardHeader className="border-b border-border/50 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col items-center gap-3 text-center pt-2 pb-2">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/20">
             <Sparkles className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <CardTitle className="text-xl">Rozpocznij swoją przygodę z FitMeal</CardTitle>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <CardTitle className="text-xl text-foreground leading-snug">Wybierz pakiet diety z FitMeal</CardTitle>
+            <p className="mt-1 text-sm text-foreground/80">
               Skonfiguruj dietę dopasowaną do Twoich celów
             </p>
           </div>
@@ -154,16 +233,17 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
 
       <CardContent className="p-6">
         {/* Progress Steps */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
+        <div className="mb-8 flex justify-center">
+          <div className="flex items-center gap-1 sm:gap-2">
             {[
               { num: 1, label: "Cel", icon: Target },
               { num: 2, label: "Plan", icon: Dumbbell },
               { num: 3, label: "Okres", icon: Calendar },
-              { num: 4, label: "Płatność", icon: CreditCard },
+              { num: 4, label: "Dane", icon: User },
+              { num: 5, label: "Płatność", icon: CreditCard },
             ].map((s, i) => (
               <div key={s.num} className="flex items-center">
-                <div className="flex flex-col items-center gap-2">
+                <div className="flex flex-col items-center gap-1 sm:gap-2">
                   <div
                     className={`flex h-10 w-10 items-center justify-center rounded-full transition-all ${
                       step >= s.num
@@ -173,14 +253,14 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
                   >
                     <s.icon className="h-5 w-5" />
                   </div>
-                  <span className={`text-xs font-medium ${
+                  <span className={`text-xs font-medium leading-tight text-center ${
                     step >= s.num ? "text-primary" : "text-muted-foreground"
                   }`}>
                     {s.label}
                   </span>
                 </div>
-                {i < 3 && (
-                  <div className={`mx-2 h-0.5 w-12 sm:w-20 ${
+                {i < 4 && (
+                  <div className={`h-0.5 w-8 sm:w-12 mx-1 sm:mx-2 ${
                     step > s.num ? "bg-primary" : "bg-border"
                   }`} />
                 )}
@@ -231,14 +311,15 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
                   <Slider
                     value={kcalTarget}
                     onValueChange={setKcalTarget}
-                    min={1500}
-                    max={4000}
-                    step={100}
+                    min={kcalRange.min}
+                    max={kcalRange.max}
+                    step={50}
+                    className="[&_[data-orientation=horizontal]]:h-3 [&_[role=slider]]:h-6 [&_[role=slider]]:w-6"
                   />
                   <div className="mt-2 flex justify-between text-sm">
-                    <span className="text-muted-foreground">1500 kcal</span>
+                    <span className="text-muted-foreground">{kcalRange.min} kcal</span>
                     <span className="font-bold text-primary">{kcalTarget[0]} kcal</span>
-                    <span className="text-muted-foreground">4000 kcal</span>
+                    <span className="text-muted-foreground">{kcalRange.max} kcal</span>
                   </div>
                 </div>
               </div>
@@ -334,6 +415,25 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
               </div>
             </RadioGroup>
 
+            <div className="mt-6 space-y-3">
+              <Label htmlFor="discountCode" className="text-sm font-medium">Kod rabatowy (opcjonalnie)</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="discountCode"
+                  value={discountCode}
+                  onChange={(e) => setDiscountCode(e.target.value)}
+                  placeholder="Wpisz kod rabatowy"
+                  className="flex-1"
+                />
+                <Button onClick={applyDiscount} variant="outline" disabled={!discountCode.trim()}>
+                  Zastosuj
+                </Button>
+              </div>
+              {appliedDiscount > 0 && (
+                <p className="text-sm text-green-600">Rabat -{appliedDiscount}% zastosowany!</p>
+              )}
+            </div>
+
             {selectedPlanData && (
               <div className="mt-6 rounded-xl bg-secondary/50 p-4">
                 <h4 className="font-semibold text-foreground">Podsumowanie</h4>
@@ -348,8 +448,14 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
                   </div>
                   {selectedDurationData && selectedDurationData.discount > 0 && (
                     <div className="flex justify-between text-green-600">
-                      <span>Rabat</span>
+                      <span>Rabat okresowy</span>
                       <span>-{selectedDurationData.discount}%</span>
+                    </div>
+                  )}
+                  {appliedDiscount > 0 && (
+                    <div className="flex justify-between text-green-600">
+                      <span>Rabat kodowy</span>
+                      <span>-{appliedDiscount}%</span>
                     </div>
                   )}
                   <div className="border-t border-border pt-2">
@@ -364,8 +470,80 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
           </div>
         )}
 
-        {/* Step 4: Payment */}
+        {/* Step 4: Confirm User Data */}
         {step === 4 && (
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-foreground">
+              Potwierdź dane dostawy
+            </h3>
+
+            <Alert className="border-amber-500/50 bg-amber-50 text-amber-900">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Ważne</AlertTitle>
+              <AlertDescription>
+                Jeśli dane się nie zgadzają, możesz je zmienić w <span className="font-semibold">Ustawieniach profilu</span> przed dokonaniem płatności.
+              </AlertDescription>
+            </Alert>
+
+            <div className="space-y-4 rounded-xl bg-secondary/50 p-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-2">
+                  <Label>Imię i nazwisko</Label>
+                  <div className="text-sm font-medium text-foreground bg-background/50 px-3 py-2 rounded-md border">
+                    Anna Kowalska
+                  </div>
+                </div>
+                <div className="grid gap-2">
+                  <Label>Numer telefonu</Label>
+                  <div className="text-sm font-medium text-foreground bg-background/50 px-3 py-2 rounded-md border">
+                    +48 600 700 800
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <Label>Adres dostawy</Label>
+                <div className="text-sm font-medium text-foreground bg-background/50 px-3 py-2 rounded-md border">
+                  ul. Marszałkowska 10A, 00-001 Warszawa
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <Label>Preferowana godzina dostawy</Label>
+                <div className="text-sm font-medium text-foreground bg-background/50 px-3 py-2 rounded-md border">
+                  08:00-10:00
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-border/50 bg-background/50 p-4">
+              <h4 className="font-semibold text-foreground">Podsumowanie zamówienia</h4>
+              <div className="mt-3 space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Typ diety:</span>
+                  <span className="font-medium">{dietTypes.find(d => d.id === selectedDiet)?.name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Plan:</span>
+                  <span className="font-medium">{selectedPlanData?.name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Okres:</span>
+                  <span className="font-medium">{selectedDurationData?.label}</span>
+                </div>
+                <div className="border-t border-border pt-2">
+                  <div className="flex justify-between">
+                    <span className="font-semibold">Do zapłaty:</span>
+                    <span className="text-lg font-bold text-primary">{calculatePrice()} zł</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 5: Payment */}
+        {step === 5 && (
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-foreground">
               Potwierdź zamówienie
@@ -416,10 +594,15 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
             <Button
               className="w-full"
               size="lg"
-              onClick={onPurchase}
+              onClick={handlePayment}
+              disabled={isProcessingPayment}
             >
-              <CreditCard className="mr-2 h-5 w-5" />
-              Zapłać {calculatePrice()} zł
+              {isProcessingPayment ? (
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              ) : (
+                <CreditCard className="mr-2 h-5 w-5" />
+              )}
+              {isProcessingPayment ? "Przetwarzanie płatności…" : `Zapłać ${calculatePrice()} zł`}
             </Button>
           </div>
         )}
@@ -434,7 +617,7 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
             <div />
           )}
 
-          {step < 4 && (
+          {step < 5 && (
             <Button
               onClick={() => setStep(step + 1)}
               disabled={!canProceed()}

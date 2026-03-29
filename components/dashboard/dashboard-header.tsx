@@ -21,6 +21,7 @@ import {
   X,
   Home,
   CalendarDays,
+  Salad,
   Package,
   Heart,
   HelpCircle
@@ -32,6 +33,7 @@ import { HelpCenter } from "./help-center"
 
 const navItems = [
   { label: "Panel", href: "/dashboard", icon: Home },
+  { label: "Wybierz dietę", href: "/dashboard/start", icon: Salad },
   { label: "Plan tygodnia", href: "/dashboard#plan", icon: CalendarDays },
   { label: "Moje zamowienia", href: "/dashboard#tracking", icon: Package },
   { label: "Preferencje", href: "/dashboard#preferences", icon: Heart },

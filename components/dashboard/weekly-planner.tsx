@@ -306,7 +306,7 @@ export function WeeklyPlanner() {
   const tomorrowLockAt = getTomorrowLockAt()
   const msToTomorrowLock = tomorrowLockAt.getTime() - now.getTime()
   const tomorrowLocked = msToTomorrowLock <= 0
-  const showTomorrowLockBanner = !isPastDate(selectedDate)
+  const showTomorrowLockBanner = true
   const tomorrowStart = (() => {
     const todayStart = new Date(now)
     todayStart.setHours(0, 0, 0, 0)
@@ -322,7 +322,7 @@ export function WeeklyPlanner() {
           <div>
             <CardTitle className="text-xl">Plan tygodnia</CardTitle>
             <p className="mt-1 text-sm text-muted-foreground">
-              Zaplanuj swoje posilki na caly tydzien
+              Zaplanuj swoje posiłki na cały tydzień
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">

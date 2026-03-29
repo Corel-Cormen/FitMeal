@@ -1,30 +1,15 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { DashboardStats } from "@/components/dashboard/dashboard-stats"
 import { WeeklyPlanner } from "@/components/dashboard/weekly-planner"
 import { PreferencesPanel } from "@/components/dashboard/preferences-panel"
 import { OrderTracking } from "@/components/dashboard/order-tracking"
-import { PurchaseDietPanel } from "@/components/dashboard/purchase-diet-panel"
-
-const HAS_PURCHASED_DIET_KEY = "fitmeal_hasPurchasedDiet"
+import { DietCtaSection } from "@/components/dashboard/diet-cta-section"
 
 export default function DashboardPage() {
-  // In a real app, this would come from user auth/database
-  const [hasPurchasedDiet, setHasPurchasedDiet] = useState(false)
-
-  useEffect(() => {
-    const hasPurchased = typeof window !== "undefined" && localStorage.getItem(HAS_PURCHASED_DIET_KEY) === "true"
-    if (hasPurchased) setHasPurchasedDiet(true)
-  }, [])
-
-  const handlePurchase = () => {
-    // In a real app, this would process payment and update database
-    localStorage.setItem(HAS_PURCHASED_DIET_KEY, "true")
-    setHasPurchasedDiet(true)
-  }
-
   return (
     <div className="min-h-screen bg-background">
       <DashboardHeader />
@@ -34,32 +19,23 @@ export default function DashboardPage() {
             Witaj, <span className="text-primary">Anna</span>
           </h1>
           <p className="mt-1 text-muted-foreground">
-            {hasPurchasedDiet
-              ? "Sprawdź swój plan żywieniowy i śledź zamówienia"
-              : "Rozpocznij swoją przygodę ze zdrowym odżywianiem"
-            }
+            Sprawdź swój plan żywieniowy i śledź zamówienia
           </p>
         </div>
-
-        {hasPurchasedDiet ? (
-          <div className="space-y-8">
-            <DashboardStats />
-            <div className="grid gap-8 lg:grid-cols-3">
-              <div className="lg:col-span-2">
-                <WeeklyPlanner />
-              </div>
+        <div className="space-y-12">
+          <DashboardStats />
+          <div className="grid gap-8 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <WeeklyPlanner />
+            </div>
               <div>
                 <OrderTracking />
               </div>
             </div>
-
             <PreferencesPanel />
-          </div>
-        ) : (
-          <div className="mx-auto max-w-4xl">
-            <PurchaseDietPanel onPurchase={handlePurchase} />
-          </div>
-        )}
+
+          <DietCtaSection />
+        </div>
       </main>
     </div>
   )

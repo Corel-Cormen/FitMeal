@@ -8,7 +8,6 @@ import { TestimonialsSection } from "@/components/testimonials-section"
 import { FAQSection } from "@/components/faq-section"
 import { NewsletterSection } from "@/components/newsletter-section"
 import { Footer } from "@/components/footer"
-import { LiveChat } from "@/components/live-chat"
 
 export default function Home() {
   return (
@@ -25,7 +24,6 @@ export default function Home() {
         <NewsletterSection />
       </main>
       <Footer />
-      <LiveChat />
     </div>
   )
 }

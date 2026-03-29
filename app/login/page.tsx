@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from "lucide-react"
 import Link from "next/link"
-import { LiveChat } from "@/components/live-chat"
 import { errorToastStyle, successToastStyle } from "@/lib/sonner-toast"
 
 const HAS_PURCHASED_DIET_KEY = "fitmeal_hasPurchasedDiet"
@@ -314,7 +313,6 @@ export default function LoginPage() {
           </Card>
         </div>
       </div>
-      <LiveChat />
     </div>
   )
 }

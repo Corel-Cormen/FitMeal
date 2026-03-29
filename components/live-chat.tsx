@@ -36,6 +36,14 @@ interface LiveChatContextType {
   setIsOpen: (open: boolean) => void
   isMinimized: boolean
   setIsMinimized: (minimized: boolean) => void
+  chatMode: "support" | "driver"
+  setChatMode: (mode: "support" | "driver") => void
+  driverInfo: {
+    name: string
+    phone: string
+    photo: string
+  } | null
+  setDriverInfo: (info: { name: string; phone: string; photo: string } | null) => void
 }
 
 const LiveChatContext = createContext<LiveChatContextType | undefined>(undefined)
@@ -48,12 +56,37 @@ export function useLiveChat() {
   return context
 }
 
+export function useOpenDriverChat() {
+  const { setChatMode, setDriverInfo, setIsOpen } = useLiveChat()
+
+  return (driverInfo: { name: string; phone: string; photo: string }) => {
+    setChatMode("driver")
+    setDriverInfo(driverInfo)
+    setIsOpen(true)
+  }
+}
+
 export function LiveChatProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
+  const [chatMode, setChatMode] = useState<"support" | "driver">("support")
+  const [driverInfo, setDriverInfo] = useState<{
+    name: string
+    phone: string
+    photo: string
+  } | null>(null)
 
   return (
-    <LiveChatContext.Provider value={{ isOpen, setIsOpen, isMinimized, setIsMinimized }}>
+    <LiveChatContext.Provider value={{
+      isOpen,
+      setIsOpen,
+      isMinimized,
+      setIsMinimized,
+      chatMode,
+      setChatMode,
+      driverInfo,
+      setDriverInfo
+    }}>
       {children}
     </LiveChatContext.Provider>
   )
@@ -64,6 +97,13 @@ const quickReplies = [
   "Chcę zmienić menu",
   "Mam pytanie o dietę",
   "Problem z płatnością",
+]
+
+const driverQuickReplies = [
+  "Gdzie jesteś?",
+  "Ile jeszcze czasu?",
+  "Czy mogę zmienić adres dostawy?",
+  "Mam problem z dostępem",
 ]
 
 const botResponses: Record<string, string> = {
@@ -83,19 +123,40 @@ const botResponses: Record<string, string> = {
     "Dziękuję za wiadomość! Przeanalizuję Twoje pytanie i odpowiem najszybciej, jak to możliwe. Jeśli sprawa jest pilna, kliknij przycisk „Połącz z konsultantem” poniżej.",
 }
 
+const driverResponses: Record<string, string> = {
+  "gdzie jesteś":
+    "Jestem w drodze do Ciebie! Według GPS jestem około 5-10 minut od Twojego adresu. Śledź mnie na mapie w aplikacji.",
+
+  "ile jeszcze czasu":
+    "Według nawigacji powinienem dotrzeć za około 8 minut. Jeśli będę miał opóźnienie, natychmiast Cię poinformuję!",
+
+  "czy mogę zmienić adres dostawy":
+    "Jeśli jesteś jeszcze w domu, mogę zmienić adres dostawy. Proszę podaj nowy adres i kod do bramy jeśli jest potrzebny.",
+
+  "mam problem z dostępem":
+    "Rozumiem! Czy możesz opisać problem z dostępem? Czy to kod do bramy, domofon czy coś innego? Pomożę Ci to rozwiązać.",
+
+  default:
+    "Jasne, słyszę Cię! Zaraz sprawdzę i dam znać. Jeśli to coś pilnego, zadzwoń do mnie bezpośrednio.",
+}
+
 export function LiveChat() {
-  const { isOpen, setIsOpen, isMinimized, setIsMinimized } = useLiveChat()
+  const { isOpen, setIsOpen, isMinimized, setIsMinimized, chatMode, driverInfo } = useLiveChat()
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Cześć! Jestem asystentem FitMeal. W czym mogę Ci pomóc?",
-      sender: "bot",
+      text: chatMode === "driver" && driverInfo
+        ? `Cześć! Rozmawiasz z ${driverInfo.name}, Twoim kierowcą dostawy. W czym mogę Ci pomóc?`
+        : "Cześć! Jestem asystentem FitMeal. W czym mogę Ci pomóc?",
+      sender: chatMode === "driver" ? "agent" : "bot",
       timestamp: new Date(),
+      agentName: chatMode === "driver" && driverInfo ? driverInfo.name : undefined,
+      agentAvatar: chatMode === "driver" && driverInfo ? driverInfo.photo : undefined,
     },
   ])
   const [inputValue, setInputValue] = useState("")
   const [isTyping, setIsTyping] = useState(false)
-  const [isConnectedToAgent, setIsConnectedToAgent] = useState(false)
+  const [isConnectedToAgent, setIsConnectedToAgent] = useState(chatMode === "driver")
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
@@ -124,9 +185,10 @@ export function LiveChat() {
       setIsTyping(false)
 
       const lowerText = text.toLowerCase()
-      let responseText = botResponses.default
+      let responseText = chatMode === "driver" ? driverResponses.default : botResponses.default
 
-      for (const [key, value] of Object.entries(botResponses)) {
+      const responses = chatMode === "driver" ? driverResponses : botResponses
+      for (const [key, value] of Object.entries(responses)) {
         if (key !== "default" && lowerText.includes(key)) {
           responseText = value
           break
@@ -135,13 +197,23 @@ export function LiveChat() {
 
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: isConnectedToAgent
+        text: chatMode === "driver"
+          ? responseText
+          : isConnectedToAgent
           ? "Dziękuje za wiadomość. Już sprawdzam..."
           : responseText,
-        sender: isConnectedToAgent ? "agent" : "bot",
+        sender: chatMode === "driver" ? "agent" : (isConnectedToAgent ? "agent" : "bot"),
         timestamp: new Date(),
-        agentName: isConnectedToAgent ? "Anna Kowalska" : undefined,
-        agentAvatar: isConnectedToAgent ? "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" : undefined,
+        agentName: chatMode === "driver" && driverInfo
+          ? driverInfo.name
+          : isConnectedToAgent
+          ? "Anna Kowalska"
+          : undefined,
+        agentAvatar: chatMode === "driver" && driverInfo
+          ? driverInfo.photo
+          : isConnectedToAgent
+          ? "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop"
+          : undefined,
       }
 
       setMessages((prev) => [...prev, botMessage])
@@ -199,7 +271,9 @@ export function LiveChat() {
         <div className="flex items-center gap-3">
           <div className="relative">
             <Avatar className="h-10 w-10">
-              {isConnectedToAgent ? (
+              {chatMode === "driver" && driverInfo ? (
+                <AvatarImage src={driverInfo.photo} />
+              ) : isConnectedToAgent ? (
                 <AvatarImage src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" />
               ) : (
                 <AvatarFallback className="bg-primary text-primary-foreground">
@@ -211,10 +285,18 @@ export function LiveChat() {
           </div>
           <div>
             <CardTitle className="text-sm">
-              {isConnectedToAgent ? "Anna Kowalska" : "FitMeal Support"}
+              {chatMode === "driver" && driverInfo
+                ? driverInfo.name
+                : isConnectedToAgent
+                ? "Anna Kowalska"
+                : "FitMeal Support"}
             </CardTitle>
             <p className="text-xs text-muted-foreground">
-              {isConnectedToAgent ? "Konsultant" : "Asystent AI"}
+              {chatMode === "driver"
+                ? "Kierowca dostawy"
+                : isConnectedToAgent
+                ? "Konsultant"
+                : "Asystent AI"}
             </p>
           </div>
         </div>
@@ -311,11 +393,11 @@ export function LiveChat() {
               </div>
             </div>
 
-            {!isConnectedToAgent && messages.length < 4 && (
+            {((chatMode === "driver" && messages.length < 4) || (chatMode === "support" && !isConnectedToAgent && messages.length < 4)) && (
               <div className="border-t p-3">
                 <p className="mb-2 text-xs text-muted-foreground">Szybkie odpowiedzi:</p>
                 <div className="flex flex-wrap gap-2">
-                  {quickReplies.map((reply) => (
+                  {(chatMode === "driver" ? driverQuickReplies : quickReplies).map((reply) => (
                     <Badge
                       key={reply}
                       variant="outline"
