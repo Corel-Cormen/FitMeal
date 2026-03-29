@@ -1,13 +1,20 @@
 "use client"
 
-import { useState } from "react"
-import { toast } from "sonner"
+import { useEffect, useState } from "react"
+import { toastSuccess } from "@/lib/sonner-toast"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import {
   Plus,
   X,
@@ -19,7 +26,8 @@ import {
   Wheat,
   Fish,
   Egg,
-  Nut
+  Nut,
+  Clock
 } from "lucide-react"
 import {
   Dialog,
@@ -60,11 +68,22 @@ const availableIngredients = [
   "Orzechy wloskie", "Migdaly", "Orzechy nerkowca", "Pestki slonecznika"
 ]
 
+const DELIVERY_WINDOW_KEY = "fitmeal_delivery_window"
+
+const deliveryWindows = [
+  { value: "06:00 - 08:00", label: "06:00 - 08:00" },
+  { value: "08:00 - 10:00", label: "08:00 - 10:00" },
+  { value: "10:00 - 12:00", label: "10:00 - 12:00" },
+  { value: "12:00 - 14:00", label: "12:00 - 14:00" },
+  { value: "14:00 - 16:00", label: "14:00 - 16:00" },
+]
+
 export function PreferencesPanel() {
   const [excludedAllergens, setExcludedAllergens] = useState<string[]>(["laktoza", "orzechy"])
   const [favoriteIngredients, setFavoriteIngredients] = useState<string[]>(["Kurczak", "Losos", "Awokado", "Brokuly"])
   const [excludedIngredients, setExcludedIngredients] = useState<string[]>(["Wieprzowina", "Baklazan"])
   const [searchQuery, setSearchQuery] = useState("")
+  const [deliveryWindow, setDeliveryWindow] = useState(deliveryWindows[1].value)
 
   const [dietPreferences, setDietPreferences] = useState({
     vegetarian: false,
@@ -74,6 +93,14 @@ export function PreferencesPanel() {
     keto: false,
     highProtein: true,
   })
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const saved = localStorage.getItem(DELIVERY_WINDOW_KEY)
+    if (saved && deliveryWindows.some((w) => w.value === saved)) {
+      setDeliveryWindow(saved)
+    }
+  }, [])
 
   const toggleAllergen = (id: string) => {
     setExcludedAllergens(prev => 
@@ -110,8 +137,11 @@ export function PreferencesPanel() {
   )
 
   const handleSavePreferences = () => {
-    toast.success("Preferencje zostały pomyślnie zapisane!", {
-      description: "Twoje ustawienia żywieniowe zostały zaktualizowane.",
+    if (typeof window !== "undefined") {
+      localStorage.setItem(DELIVERY_WINDOW_KEY, deliveryWindow)
+    }
+    toastSuccess("Preferencje zostały pomyślnie zapisane!", {
+      description: "Twoje ustawienia zostały zaktualizowane.",
       duration: 3000,
     })
   }
@@ -127,8 +157,9 @@ export function PreferencesPanel() {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="diet" className="w-full">
-            <TabsList className="mb-6 grid w-full grid-cols-3">
+            <TabsList className="mb-6 grid w-full grid-cols-4">
               <TabsTrigger value="diet">Dieta</TabsTrigger>
+              <TabsTrigger value="delivery">Dostawa</TabsTrigger>
               <TabsTrigger value="allergens">Alergeny</TabsTrigger>
               <TabsTrigger value="ingredients">Skladniki</TabsTrigger>
             </TabsList>
@@ -172,6 +203,41 @@ export function PreferencesPanel() {
                     </div>
                   )
                 })}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="delivery" className="space-y-4">
+              <div className="rounded-xl border border-border/50 bg-card p-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
+                    <Clock className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-foreground">Godzina dostawy</p>
+                    <p className="text-sm text-muted-foreground">
+                      Wybierz preferowane okno dostawy. Zmiany zastosują się do kolejnych dostaw.
+                    </p>
+
+                    <div className="mt-4 grid gap-2 sm:max-w-sm">
+                      <Label htmlFor="delivery-window">Okno dostawy</Label>
+                      <Select value={deliveryWindow} onValueChange={setDeliveryWindow}>
+                        <SelectTrigger id="delivery-window">
+                          <SelectValue placeholder="Wybierz okno" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {deliveryWindows.map((w) => (
+                            <SelectItem key={w.value} value={w.value}>
+                              {w.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-muted-foreground">
+                        Aktualnie ustawione: <span className="font-medium text-foreground">{deliveryWindow}</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </TabsContent>
 

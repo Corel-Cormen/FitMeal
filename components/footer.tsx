@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { Instagram, Facebook, Youtube } from "lucide-react"
+import { LegalDialogs } from "@/components/legal-dialogs"
 
 export function Footer() {
   return (
@@ -9,7 +10,7 @@ export function Footer() {
           <div>
             <Link href="/" className="mb-4 flex items-center gap-2">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg">
-                <img src="images/fitmeal-logo.jpg" />
+                <img src="/images/fitmeal-logo.png" alt="FitMeal Logo" />
               </div>
               <span className="text-xl font-bold text-foreground">FitMeal</span>
             </Link>
@@ -36,6 +37,7 @@ export function Footer() {
               <li><Link href="#menu" className="text-muted-foreground hover:text-primary">Menu</Link></li>
               <li><Link href="#cennik" className="text-muted-foreground hover:text-primary">Cennik</Link></li>
               <li><Link href="#sprawdz-dostepnosc" className="text-muted-foreground hover:text-primary">Zasięg dostaw</Link></li>
+              <li><Link href="#newsletter" className="text-muted-foreground hover:text-primary">Newsletter</Link></li>
               <li><Link href="/login" className="text-muted-foreground hover:text-primary">Logowanie</Link></li>
             </ul>
           </div>
@@ -63,10 +65,7 @@ export function Footer() {
           <p className="text-sm text-muted-foreground">
             &copy; 2026 FitMeal. Wszystkie prawa zastrzeżone.
           </p>
-          <div className="flex gap-6 text-sm">
-            <Link href="#" className="text-muted-foreground hover:text-primary">Polityka prywatności</Link>
-            <Link href="#" className="text-muted-foreground hover:text-primary">Regulamin</Link>
-          </div>
+          <LegalDialogs className="flex gap-6 text-sm whitespace-nowrap pr-24" />
         </div>
       </div>
     </footer>

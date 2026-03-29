@@ -2,12 +2,16 @@
 
 import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { LiveChat } from "@/components/live-chat"
+import { errorToastStyle, successToastStyle } from "@/lib/sonner-toast"
+
+const HAS_PURCHASED_DIET_KEY = "fitmeal_hasPurchasedDiet"
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true)
@@ -15,6 +19,11 @@ export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [name, setName] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const [nameInvalid, setNameInvalid] = useState(false)
+  const [emailInvalid, setEmailInvalid] = useState(false)
+  const [passwordInvalid, setPasswordInvalid] = useState(false)
 
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -28,10 +37,99 @@ export default function LoginPage() {
     }
   }, [searchParams])
 
+  useEffect(() => {
+    if (isLogin) setNameInvalid(false)
+  }, [isLogin])
+
+  const validateEmail = (value: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(value)
+  }
+
+  const validate = () => {
+    const trimmedEmail = email.trim()
+
+    const nextNameInvalid = !isLogin && !name.trim()
+    const nextEmailInvalid = !trimmedEmail || !validateEmail(trimmedEmail)
+    const nextPasswordInvalid = !password || password.length < 6
+
+    setNameInvalid(nextNameInvalid)
+    setEmailInvalid(nextEmailInvalid)
+    setPasswordInvalid(nextPasswordInvalid)
+
+    if (nextNameInvalid) {
+      toast.error("Proszę wpisać imię i nazwisko.", { style: errorToastStyle })
+      return false
+    }
+
+    if (!trimmedEmail) {
+      toast.error("Proszę wpisać email.", { style: errorToastStyle })
+      return false
+    }
+
+    if (!validateEmail(trimmedEmail)) {
+      toast.error("Email nie jest w prawidłowym formacie.", { style: errorToastStyle })
+      return false
+    }
+
+    if (!password) {
+      toast.error("Proszę wpisać hasło.", { style: errorToastStyle })
+      return false
+    }
+
+    if (password.length < 6) {
+      toast.error("Hasło musi mieć co najmniej 6 znaków.", { style: errorToastStyle })
+      return false
+    }
+
+    return true
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Form submitted:", { email, password, name, isLogin })
-    router.push("/dashboard")
+    if (isSubmitting) return
+    if (!validate()) return
+
+    setIsSubmitting(true)
+
+    setTimeout(() => {
+      toast.success(isLogin ? "Zalogowano pomyślnie!" : "Konto zostało utworzone!", {
+        style: successToastStyle,
+      })
+
+      if (isLogin) {
+        localStorage.setItem(HAS_PURCHASED_DIET_KEY, "true")
+      } else {
+        localStorage.setItem(HAS_PURCHASED_DIET_KEY, "false")
+      }
+
+      setIsSubmitting(false)
+      router.push(isLogin ? "/dashboard" : "/dashboard/start")
+    }, 800)
+  }
+
+  const handleSocialAuth = (provider: "Google" | "Facebook") => {
+    if (isSubmitting) return
+
+    setIsSubmitting(true)
+
+    setTimeout(() => {
+      toast.success(
+        isLogin
+          ? `Zalogowano przez ${provider}!`
+          : `Konto zostało utworzone przez ${provider}!`,
+        { style: successToastStyle },
+      )
+
+      if (isLogin) {
+        localStorage.setItem(HAS_PURCHASED_DIET_KEY, "true")
+      } else {
+        localStorage.setItem(HAS_PURCHASED_DIET_KEY, "false")
+      }
+
+      setIsSubmitting(false)
+      router.push(isLogin ? "/dashboard" : "/dashboard/start")
+    }, 800)
   }
 
   return (
@@ -58,7 +156,7 @@ export default function LoginPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                 {!isLogin && (
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -66,9 +164,14 @@ export default function LoginPage() {
                       type="text"
                       placeholder="Imię i nazwisko"
                       value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={(e) => {
+                        const next = e.target.value
+                        setName(next)
+                        if (nameInvalid && next.trim()) setNameInvalid(false)
+                      }}
                       className="pl-10"
-                      required
+                      aria-invalid={nameInvalid}
+                      disabled={isSubmitting}
                     />
                   </div>
                 )}
@@ -78,9 +181,14 @@ export default function LoginPage() {
                     type="email"
                     placeholder="Adres e-mail"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      const next = e.target.value
+                      setEmail(next)
+                      if (emailInvalid && validateEmail(next.trim())) setEmailInvalid(false)
+                    }}
                     className="pl-10"
-                    required
+                    aria-invalid={emailInvalid}
+                    disabled={isSubmitting}
                   />
                 </div>
 
@@ -90,14 +198,20 @@ export default function LoginPage() {
                     type={showPassword ? "text" : "password"}
                     placeholder="Hasło"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                      const next = e.target.value
+                      setPassword(next)
+                      if (passwordInvalid && next.length >= 6) setPasswordInvalid(false)
+                    }}
                     className="pl-10 pr-10"
-                    required
+                    aria-invalid={passwordInvalid}
+                    disabled={isSubmitting}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    disabled={isSubmitting}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -111,8 +225,8 @@ export default function LoginPage() {
                   </div>
                 )}
 
-                <Button type="submit" className="w-full" size="lg">
-                  {isLogin ? "Zaloguj się" : "Zarejestruj się"}
+                <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
+                  {isSubmitting ? "Przetwarzanie…" : isLogin ? "Zaloguj się" : "Zarejestruj się"}
                 </Button>
 
                 <div className="relative my-6">
@@ -125,7 +239,13 @@ export default function LoginPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
-                  <Button variant="outline" type="button" className="w-full">
+                  <Button
+                    variant="outline"
+                    type="button"
+                    className="w-full"
+                    onClick={() => handleSocialAuth("Google")}
+                    disabled={isSubmitting}
+                  >
                     <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                       <path
                         fill="currentColor"
@@ -146,7 +266,13 @@ export default function LoginPage() {
                     </svg>
                     Google
                   </Button>
-                  <Button variant="outline" type="button" className="w-full">
+                  <Button
+                    variant="outline"
+                    type="button"
+                    className="w-full"
+                    onClick={() => handleSocialAuth("Facebook")}
+                    disabled={isSubmitting}
+                  >
                     <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z" />
                     </svg>

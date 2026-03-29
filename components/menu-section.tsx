@@ -31,7 +31,7 @@ const meals = [
     tag: "Omega-3"
   },
   {
-    name: "Protein Salad",
+    name: "Sałatka Proteinowa",
     description: "Mix sałat, pierś z indyka, jajka, orzechy, dressing balsamiczny",
     image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop",
     kcal: 420,

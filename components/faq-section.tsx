@@ -17,9 +17,9 @@ import {
   Utensils,
   Settings,
   Phone,
-  Mail,
 } from "lucide-react"
 import { LiveChatTrigger } from "./live-chat"
+import { ContactFormDialog } from "./contact-form-dialog"
 
 const faqData = [
   {
@@ -224,14 +224,13 @@ export function FAQSection() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap justify-center gap-4">
-              <Button variant="outline" className="gap-2">
-                <Phone className="h-4 w-4" />
-                +48 123 456 789
+              <Button variant="outline" className="gap-2" asChild>
+                <a href="tel:+48123456789" aria-label="Zadzwoń: +48 123 456 789">
+                  <Phone className="h-4 w-4" />
+                  +48 123 456 789
+                </a>
               </Button>
-              <Button variant="outline" className="gap-2">
-                <Mail className="h-4 w-4" />
-                pomoc@fitmeal.pl
-              </Button>
+              <ContactFormDialog />
               <LiveChatTrigger className="gap-2" />
             </div>
           </CardContent>

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { toast } from "sonner"
+import { toastError, toastSuccess } from "@/lib/sonner-toast"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -30,7 +30,7 @@ const deliveryAreas = [
   { city: "Poznań", available: true, deliveryTime: "6:30-9:30", zones: ["Stare Miasto", "Jezyce", "Wilda", "Grunwald", "Nowe Miasto"] },
   { city: "Gdańsk", available: true, deliveryTime: "6:00-9:00", zones: ["Śródmiescie", "Wrzeszcz", "Oliwa", "Przymorze", "Zaspa"] },
   { city: "Gdynia", available: true, deliveryTime: "6:00-9:00", zones: ["Śródmiescie", "Orłowo", "Redłowo", "Wielki Kack"] },
-  { city: "Sopot", available: true, deliveryTime: "6:00-9:00", zones: ["Caly obszar"] },
+  { city: "Sopot", available: true, deliveryTime: "6:00-9:00", zones: ["Cały obszar"] },
   { city: "Łódź", available: true, deliveryTime: "6:30-9:30", zones: ["Śródmiescie", "Polesie", "Bałuty", "Widzew"] },
   { city: "Katowice", available: "soon", deliveryTime: "Wkrótce", zones: [] },
   { city: "Szczecin", available: "soon", deliveryTime: "Wkrótce", zones: [] },
@@ -59,71 +59,35 @@ export function DeliveryChecker() {
 
   const handleNotifySubmit = (identifier: string) => {
     const email = notifyEmails[identifier] || ""
-    
+
     if (!email.trim()) {
-      toast.error("Proszę wpisać email", {
-        style: {
-          background: "#fee2e2",
-          border: "1px solid #fca5a5",
-          color: "#991b1b",
-        },
-      })
+      toastError("Proszę wpisać email.")
       return
     }
 
     if (!validateEmail(email)) {
-      toast.error("Email nie jest w prawidłowym formacie", {
-        style: {
-          background: "#fee2e2",
-          border: "1px solid #fca5a5",
-          color: "#991b1b",
-        },
-      })
+      toastError("Email nie jest w prawidłowym formacie.")
       return
     }
 
-    toast.success("Email został wysłany. Powiadomimy Cię wkrótce!", {
-      style: {
-        background: "#dcfce7",
-        border: "1px solid #86efac",
-        color: "#166534",
-      },
-    })
+    toastSuccess("Email został wysłany. Powiadomimy Cię wkrótce!")
     setNotifyEmails({ ...notifyEmails, [identifier]: "" })
     setSentEmails({ ...sentEmails, [identifier]: true })
   }
 
   const handleReportCitySubmit = async () => {
     if (!reportCity.trim()) {
-      toast.error("Proszę wpisać nazwę miasta", {
-        style: {
-          background: "#fee2e2",
-          border: "1px solid #fca5a5",
-          color: "#991b1b",
-        },
-      })
+      toastError("Proszę wpisać nazwę miasta.")
       return
     }
 
     if (!reportEmail.trim()) {
-      toast.error("Proszę wpisać email", {
-        style: {
-          background: "#fee2e2",
-          border: "1px solid #fca5a5",
-          color: "#991b1b",
-        },
-      })
+      toastError("Proszę wpisać email.")
       return
     }
 
     if (!validateEmail(reportEmail)) {
-      toast.error("Email nie jest w prawidłowym formacie", {
-        style: {
-          background: "#fee2e2",
-          border: "1px solid #fca5a5",
-          color: "#991b1b",
-        },
-      })
+      toastError("Email nie jest w prawidłowym formacie.")
       return
     }
 
@@ -131,14 +95,7 @@ export function DeliveryChecker() {
 
     // Symulacja wysyłania zgłoszenia
     setTimeout(() => {
-      toast.success("Zgłoszenie zostało wysłane! Dziękujemy za pomoc w rozwoju naszej sieci dostaw.", {
-        style: {
-          background: "#dcfce7",
-          border: "1px solid #86efac",
-          color: "#166534",
-        },
-      })
-      
+      toastSuccess("Zgłoszenie zostało wysłane! Dziękujemy za pomoc w rozwoju naszej sieci dostaw.")
       setReportCity("")
       setReportEmail("")
       setReportMessage("")
@@ -350,7 +307,7 @@ export function DeliveryChecker() {
                         className="mt-4"
                         onClick={resetSearch}
                       >
-                        Sprawdz inne miasto
+                        Sprawdź inne miasto
                       </Button>
                     </div>
                   </div>

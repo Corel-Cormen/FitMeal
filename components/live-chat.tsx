@@ -188,8 +188,14 @@ export function LiveChat() {
   }
 
   return (
-    <Card className={`fixed bottom-6 right-6 z-50 w-96 shadow-2xl transition-all ${isMinimized ? "h-14" : "h-[600px]"}`}>
-      <CardHeader className="flex flex-row items-center justify-between border-b p-4">
+    <Card
+      className={`fixed bottom-6 right-6 z-50 w-96 overflow-hidden shadow-2xl transition-all ${isMinimized ? "h-20" : "h-[600px]"}`}
+    >
+      <CardHeader
+        className={`flex flex-row items-center justify-between ${
+          isMinimized ? "h-20 px-4 py-2" : "border-b p-4"
+        }`}
+      >
         <div className="flex items-center gap-3">
           <div className="relative">
             <Avatar className="h-10 w-10">

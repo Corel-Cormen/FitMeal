@@ -22,19 +22,19 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: '/images/fitmeal-logo.jpg',
+        url: '/images/fitmeal-logo.png',
         media: '(prefers-color-scheme: light)',
       },
       {
-        url: '/images/fitmeal-logo.jpg',
+        url: '/images/fitmeal-logo.png',
         media: '(prefers-color-scheme: dark)',
       },
       {
-        url: '/images/fitmeal-logo.jpg',
-        type: 'image/svg+xml',
+        url: '/images/fitmeal-logo.png',
+        type: 'image/png',
       },
     ],
-    apple: '/images/fitmeal-logo.jpg',
+    apple: '/images/fitmeal-logo.png',
   },
 }
 

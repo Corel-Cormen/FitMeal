@@ -1,10 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
+import { toastSuccess } from "@/lib/sonner-toast"
 import {
   ChefHat,
   Package,
@@ -37,33 +38,33 @@ interface Order {
 
 const mockOrders: Order[] = [
   {
-    id: "FIT-2024-001",
+    id: "FIT-2026-001",
     date: "Dzisiaj",
     status: "delivering",
-    meals: ["Owsianka proteinowa", "Wrap z indykiem", "Power Bowl", "Baton proteinowy", "Protein Salad"],
+    meals: ["Owsianka proteinowa", "Wrap z indykiem", "Power Bowl", "Baton proteinowy", "Sałatka Proteinowa"],
     deliveryTime: "12:00 - 14:00",
     driver: {
-      name: "Marcin Nowak",
+      name: "Lakshman Kumar",
       phone: "+48 500 123 456",
       photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop"
     },
-    estimatedArrival: "12:35",
+    estimatedArrival: "13:15",
     progress: 75
   },
   {
-    id: "FIT-2024-002",
+    id: "FIT-2026-002",
     date: "Jutro",
     status: "preparing",
     meals: ["Jajecznica z awokado", "Serek z owocami", "Stek z lososiem", "Orzechy mix", "Keto Plate"],
-    deliveryTime: "08:00 - 10:00",
-    progress: 25
+    deliveryTime: "06:00 - 08:00",
+    progress: 20
   },
   {
-    id: "FIT-2024-003",
+    id: "FIT-2026-003",
     date: "Pojutrze",
     status: "preparing",
     meals: ["Smoothie bowl", "Jogurt grecki", "Buddha Bowl", "Hummus z warzywami", "Grillowany kurczak"],
-    deliveryTime: "08:00 - 10:00",
+    deliveryTime: "12:00 - 14:00",
     progress: 0
   }
 ]
@@ -131,9 +132,9 @@ function LiveTrackingCard({ order }: { order: Order }) {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
                 <span className="relative inline-flex h-3 w-3 rounded-full bg-primary" />
               </span>
-              Sledzenie na zywo
+              Śledzenie na żywo
             </CardTitle>
-            <CardDescription>Zamowienie {order.id}</CardDescription>
+            <CardDescription>Zamówienie {order.id}</CardDescription>
           </div>
           <Badge className={statusConfig[order.status].color}>
             {statusConfig[order.status].label}
@@ -207,7 +208,7 @@ function LiveTrackingCard({ order }: { order: Order }) {
 
             <div className="space-y-3">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Postep dostawy</span>
+                <span className="text-muted-foreground">Postęp dostawy</span>
                 <span className="font-medium text-foreground">{Math.round(currentProgress)}%</span>
               </div>
               <Progress value={currentProgress} className="h-2" />
@@ -226,7 +227,7 @@ function LiveTrackingCard({ order }: { order: Order }) {
         )}
 
         <div className="space-y-2">
-          <p className="text-sm font-medium text-foreground">Posilki w zamowieniu:</p>
+          <p className="text-sm font-medium text-foreground">Posiłki w zamówieniu:</p>
           <div className="flex flex-wrap gap-2">
             {order.meals.map((meal, index) => (
               <Badge key={index} variant="secondary" className="text-xs">
@@ -259,8 +260,8 @@ function OrderHistoryCard({ order }: { order: Order }) {
             {statusConfig[order.status].label}
           </Badge>
         </div>
-        <p className="text-sm text-muted-foreground">
-          {order.meals.length} posilkow | Dostawa: {order.deliveryTime}
+        <p className="text-sm text-muted-foreground whitespace-nowrap">
+          {order.meals.length} posiłków | Dostawa: {order.deliveryTime}
         </p>
       </div>
       <div className="text-right">
@@ -275,10 +276,26 @@ function OrderHistoryCard({ order }: { order: Order }) {
 
 export function OrderTracking() {
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const refreshTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (refreshTimeoutRef.current) clearTimeout(refreshTimeoutRef.current)
+    }
+  }, [])
 
   const handleRefresh = () => {
+    if (isRefreshing) return
+
     setIsRefreshing(true)
-    setTimeout(() => setIsRefreshing(false), 1000)
+
+    if (refreshTimeoutRef.current) clearTimeout(refreshTimeoutRef.current)
+    refreshTimeoutRef.current = setTimeout(() => {
+      setIsRefreshing(false)
+      toastSuccess("Odświeżono", {
+        description: "Status zamówień został zaktualizowany.",
+      })
+    }, 1000)
   }
 
   const activeOrder = mockOrders.find(o => o.status === "delivering")
@@ -288,12 +305,12 @@ export function OrderTracking() {
     <section id="tracking" className="scroll-mt-20 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-foreground">Sledzenie zamowien</h2>
-          <p className="text-sm text-muted-foreground">Sprawdz status przygotowania i dostawy</p>
+          <h2 className="text-xl font-bold text-foreground">Śledzenie zamówień</h2>
+          <p className="text-sm text-muted-foreground">Sprawdź status przygotowania i dostawy</p>
         </div>
         <Button variant="outline" size="sm" onClick={handleRefresh}>
           <RefreshCw className={`mr-2 h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
-          Odswiez
+          Odśwież
         </Button>
       </div>
 
@@ -303,7 +320,7 @@ export function OrderTracking() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <Clock className="h-5 w-5 text-primary" />
-            Nadchodzace dostawy
+            Nadchodzące dostawy
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">

@@ -5,6 +5,7 @@ import Image from "next/image"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -14,7 +15,7 @@ export function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2">
           <Image
-            src="/images/fitmeal-logo.jpg"
+            src="/images/fitmeal-logo.png"
             alt="FitMeal Logo"
             width={36}
             height={36}
@@ -39,9 +40,13 @@ export function Header() {
           <Link href="#faq" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
             Pomoc
           </Link>
+          <Link href="#newsletter" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+            Newsletter
+          </Link>
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
+          <ThemeToggle />
           <Button variant="ghost" asChild>
             <Link href="/login">Zaloguj się</Link>
           </Button>
@@ -76,7 +81,14 @@ export function Header() {
             <Link href="#faq" className="text-sm font-medium text-muted-foreground" onClick={() => setMobileMenuOpen(false)}>
               Pomoc
             </Link>
+            <Link href="#newsletter" className="text-sm font-medium text-muted-foreground" onClick={() => setMobileMenuOpen(false)}>
+              Newsletter
+            </Link>
             <div className="flex flex-col gap-2 pt-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Motyw</span>
+                <ThemeToggle />
+              </div>
               <Button variant="outline" asChild onClick={() => setMobileMenuOpen(false)}>
                 <Link href="/login">Zaloguj się</Link>
               </Button>

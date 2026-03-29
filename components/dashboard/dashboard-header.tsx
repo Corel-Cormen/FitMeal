@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/theme-toggle"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -58,7 +59,7 @@ export function DashboardHeader({
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2">
               <Image
-                src="/images/fitmeal-logo.jpg"
+                src="/images/fitmeal-logo.png"
                 alt="FitMeal Logo"
                 width={36}
                 height={36}
@@ -84,6 +85,7 @@ export function DashboardHeader({
           <div className="flex items-center gap-3">
             <HelpCenter />
             <NotificationsPanel />
+            <ThemeToggle />
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

@@ -48,7 +48,7 @@ export function HeroSection() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
                   <Timer className="h-5 w-5 text-primary" />
                 </div>
-                <span className="text-sm font-medium text-foreground">Dostawa 6:00 - 8:00</span>
+                <span className="text-sm font-medium text-foreground">Dostawa 6:00 - 9:00</span>
               </div>
             </div>
           </div>

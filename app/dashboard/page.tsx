@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { DashboardStats } from "@/components/dashboard/dashboard-stats"
 import { WeeklyPlanner } from "@/components/dashboard/weekly-planner"
@@ -8,12 +8,20 @@ import { PreferencesPanel } from "@/components/dashboard/preferences-panel"
 import { OrderTracking } from "@/components/dashboard/order-tracking"
 import { PurchaseDietPanel } from "@/components/dashboard/purchase-diet-panel"
 
+const HAS_PURCHASED_DIET_KEY = "fitmeal_hasPurchasedDiet"
+
 export default function DashboardPage() {
   // In a real app, this would come from user auth/database
   const [hasPurchasedDiet, setHasPurchasedDiet] = useState(false)
 
+  useEffect(() => {
+    const hasPurchased = typeof window !== "undefined" && localStorage.getItem(HAS_PURCHASED_DIET_KEY) === "true"
+    if (hasPurchased) setHasPurchasedDiet(true)
+  }, [])
+
   const handlePurchase = () => {
     // In a real app, this would process payment and update database
+    localStorage.setItem(HAS_PURCHASED_DIET_KEY, "true")
     setHasPurchasedDiet(true)
   }
 
