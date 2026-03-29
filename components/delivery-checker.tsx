@@ -46,11 +46,15 @@ export function DeliveryChecker() {
   const [showAllCities, setShowAllCities] = useState(false)
   const [notifyEmails, setNotifyEmails] = useState<Record<string, string>>({})
   const [sentEmails, setSentEmails] = useState<Record<string, boolean>>({})
+  const [notifyEmailErrors, setNotifyEmailErrors] = useState<Record<string, boolean>>({})
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false)
   const [reportCity, setReportCity] = useState("")
   const [reportEmail, setReportEmail] = useState("")
   const [reportMessage, setReportMessage] = useState("")
   const [isSubmittingReport, setIsSubmittingReport] = useState(false)
+
+  const [reportCityError, setReportCityError] = useState(false)
+  const [reportEmailError, setReportEmailError] = useState(false)
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -59,13 +63,16 @@ export function DeliveryChecker() {
 
   const handleNotifySubmit = (identifier: string) => {
     const email = notifyEmails[identifier] || ""
+    const trimmedEmail = email.trim()
 
-    if (!email.trim()) {
+    if (!trimmedEmail) {
+      setNotifyEmailErrors((prev) => ({ ...prev, [identifier]: true }))
       toastError("Proszę wpisać email.")
       return
     }
 
-    if (!validateEmail(email)) {
+    if (!validateEmail(trimmedEmail)) {
+      setNotifyEmailErrors((prev) => ({ ...prev, [identifier]: true }))
       toastError("Email nie jest w prawidłowym formacie.")
       return
     }
@@ -73,20 +80,30 @@ export function DeliveryChecker() {
     toastSuccess("Email został wysłany. Powiadomimy Cię wkrótce!")
     setNotifyEmails({ ...notifyEmails, [identifier]: "" })
     setSentEmails({ ...sentEmails, [identifier]: true })
+    setNotifyEmailErrors((prev) => ({ ...prev, [identifier]: false }))
   }
 
   const handleReportCitySubmit = async () => {
-    if (!reportCity.trim()) {
+    const trimmedCity = reportCity.trim()
+    const trimmedEmail = reportEmail.trim()
+
+    const nextCityError = !trimmedCity
+    const nextEmailError = !trimmedEmail || !validateEmail(trimmedEmail)
+
+    setReportCityError(nextCityError)
+    setReportEmailError(nextEmailError)
+
+    if (!trimmedCity) {
       toastError("Proszę wpisać nazwę miasta.")
       return
     }
 
-    if (!reportEmail.trim()) {
+    if (!trimmedEmail) {
       toastError("Proszę wpisać email.")
       return
     }
 
-    if (!validateEmail(reportEmail)) {
+    if (!validateEmail(trimmedEmail)) {
       toastError("Email nie jest w prawidłowym formacie.")
       return
     }
@@ -99,6 +116,8 @@ export function DeliveryChecker() {
       setReportCity("")
       setReportEmail("")
       setReportMessage("")
+      setReportCityError(false)
+      setReportEmailError(false)
       setIsReportDialogOpen(false)
       setIsSubmittingReport(false)
     }, 1500)
@@ -259,9 +278,20 @@ export function DeliveryChecker() {
                             <div className="mt-4 flex gap-2">
                               <Input 
                                 placeholder="Twój email" 
-                                className="max-w-xs"
+                                className={`max-w-xs ${
+                                  notifyEmailErrors[`soon-${result.city}`]
+                                    ? "border-destructive ring-2 ring-destructive/20"
+                                    : ""
+                                }`}
                                 value={notifyEmails[`soon-${result.city}`] || ""}
-                                onChange={(e) => setNotifyEmails({ ...notifyEmails, [`soon-${result.city}`]: e.target.value })}
+                                aria-invalid={Boolean(notifyEmailErrors[`soon-${result.city}`])}
+                                onChange={(e) => {
+                                  const next = e.target.value
+                                  setNotifyEmails({ ...notifyEmails, [`soon-${result.city}`]: next })
+                                  if (notifyEmailErrors[`soon-${result.city}`] && validateEmail(next.trim())) {
+                                    setNotifyEmailErrors((prev) => ({ ...prev, [`soon-${result.city}`]: false }))
+                                  }
+                                }}
                               />
                               <Button onClick={() => handleNotifySubmit(`soon-${result.city}`)}>Powiadom mnie</Button>
                             </div>
@@ -295,9 +325,20 @@ export function DeliveryChecker() {
                         <div className="mt-4 flex flex-col gap-3 sm:flex-row">
                           <Input 
                             placeholder="Twój email" 
-                            className="max-w-xs"
+                            className={`max-w-xs ${
+                              notifyEmailErrors["not-found"]
+                                ? "border-destructive ring-2 ring-destructive/20"
+                                : ""
+                            }`}
                             value={notifyEmails["not-found"] || ""}
-                            onChange={(e) => setNotifyEmails({ ...notifyEmails, ["not-found"]: e.target.value })}
+                            aria-invalid={Boolean(notifyEmailErrors["not-found"]) }
+                            onChange={(e) => {
+                              const next = e.target.value
+                              setNotifyEmails({ ...notifyEmails, ["not-found"]: next })
+                              if (notifyEmailErrors["not-found"] && validateEmail(next.trim())) {
+                                setNotifyEmailErrors((prev) => ({ ...prev, ["not-found"]: false }))
+                              }
+                            }}
                           />
                           <Button onClick={() => handleNotifySubmit("not-found")}>Powiadom mnie</Button>
                         </div>
@@ -394,8 +435,13 @@ export function DeliveryChecker() {
                           id="city"
                           placeholder="np. Rzeszów, Kielce, Toruń..."
                           value={reportCity}
-                          onChange={(e) => setReportCity(e.target.value)}
-                          className="mt-1"
+                          onChange={(e) => {
+                            const next = e.target.value
+                            setReportCity(next)
+                            if (reportCityError && next.trim()) setReportCityError(false)
+                          }}
+                          aria-invalid={reportCityError}
+                          className={`mt-1 ${reportCityError ? "border-destructive ring-2 ring-destructive/20" : ""}`}
                         />
                       </div>
                       <div>
@@ -405,8 +451,13 @@ export function DeliveryChecker() {
                           type="email"
                           placeholder="twoj@email.com"
                           value={reportEmail}
-                          onChange={(e) => setReportEmail(e.target.value)}
-                          className="mt-1"
+                          onChange={(e) => {
+                            const next = e.target.value
+                            setReportEmail(next)
+                            if (reportEmailError && validateEmail(next.trim())) setReportEmailError(false)
+                          }}
+                          aria-invalid={reportEmailError}
+                          className={`mt-1 ${reportEmailError ? "border-destructive ring-2 ring-destructive/20" : ""}`}
                         />
                       </div>
                       <div>

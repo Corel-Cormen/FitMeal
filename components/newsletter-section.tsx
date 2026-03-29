@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { toast } from "sonner"
 import { CheckCircle2 } from "lucide-react"
 
@@ -16,6 +16,7 @@ export function NewsletterSection() {
   const [email, setEmail] = useState("")
   const [consent, setConsent] = useState(false)
   const [consentError, setConsentError] = useState(false)
+  const [emailError, setEmailError] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [subscribedEmail, setSubscribedEmail] = useState<string | null>(null)
@@ -25,8 +26,6 @@ export function NewsletterSection() {
     return emailRegex.test(value)
   }
 
-  const isEmailValid = useMemo(() => validateEmail(email.trim()), [email])
-
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (isSubmitting || isSubscribed) return
@@ -34,14 +33,18 @@ export function NewsletterSection() {
     const trimmedEmail = email.trim()
 
     if (!trimmedEmail) {
+      setEmailError(true)
       toast.error("Proszę wpisać email.", { style: errorToastStyle })
       return
     }
 
     if (!validateEmail(trimmedEmail)) {
+      setEmailError(true)
       toast.error("Email nie jest w prawidłowym formacie.", { style: errorToastStyle })
       return
     }
+
+    setEmailError(false)
 
     if (!consent) {
       setConsentError(true)
@@ -93,10 +96,14 @@ export function NewsletterSection() {
                   id="newsletter-email"
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    const next = e.target.value
+                    setEmail(next)
+                    if (emailError && validateEmail(next.trim())) setEmailError(false)
+                  }}
                   placeholder="np. jan@example.com"
                   autoComplete="email"
-                  aria-invalid={email.trim().length > 0 && !isEmailValid}
+                  aria-invalid={emailError}
                   disabled={isSubscribed}
                 />
               </div>

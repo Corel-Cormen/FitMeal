@@ -38,6 +38,11 @@ export function ContactFormDialog({
   const [message, setMessage] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  const [nameError, setNameError] = useState(false)
+  const [fromEmailError, setFromEmailError] = useState(false)
+  const [subjectError, setSubjectError] = useState(false)
+  const [messageError, setMessageError] = useState(false)
+
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     return emailRegex.test(email)
@@ -55,33 +60,53 @@ export function ContactFormDialog({
     setSubject("")
     setMessage("")
     setIsSubmitting(false)
+
+    setNameError(false)
+    setFromEmailError(false)
+    setSubjectError(false)
+    setMessageError(false)
   }
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
     if (isSubmitting) return
 
-    if (!name.trim()) {
+    const trimmedName = name.trim()
+    const trimmedEmail = fromEmail.trim()
+    const trimmedSubject = subject.trim()
+    const trimmedMessage = message.trim()
+
+    const nextNameError = !trimmedName
+    const nextEmailError = !trimmedEmail || !validateEmail(trimmedEmail)
+    const nextSubjectError = !trimmedSubject
+    const nextMessageError = !trimmedMessage
+
+    setNameError(nextNameError)
+    setFromEmailError(nextEmailError)
+    setSubjectError(nextSubjectError)
+    setMessageError(nextMessageError)
+
+    if (!trimmedName) {
       toastError("Proszę wpisać imię.")
       return
     }
 
-    if (!fromEmail.trim()) {
+    if (!trimmedEmail) {
       toastError("Proszę wpisać email.")
       return
     }
 
-    if (!validateEmail(fromEmail.trim())) {
+    if (!validateEmail(trimmedEmail)) {
       toastError("Email nie jest w prawidłowym formacie.")
       return
     }
 
-    if (!subject.trim()) {
+    if (!trimmedSubject) {
       toastError("Proszę wpisać temat.")
       return
     }
 
-    if (!message.trim()) {
+    if (!trimmedMessage) {
       toastError("Proszę wpisać wiadomość")
       return
     }
@@ -130,9 +155,15 @@ export function ContactFormDialog({
             <Input
               id="contact-name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                const next = e.target.value
+                setName(next)
+                if (nameError && next.trim()) setNameError(false)
+              }}
               autoComplete="name"
               placeholder="Np. Jan Kowalski"
+              aria-invalid={nameError}
+              className={nameError ? "border-destructive ring-2 ring-destructive/20" : undefined}
               required
             />
           </div>
@@ -143,9 +174,15 @@ export function ContactFormDialog({
               id="contact-email"
               type="email"
               value={fromEmail}
-              onChange={(e) => setFromEmail(e.target.value)}
+              onChange={(e) => {
+                const next = e.target.value
+                setFromEmail(next)
+                if (fromEmailError && validateEmail(next.trim())) setFromEmailError(false)
+              }}
               autoComplete="email"
               placeholder="Np. jan@example.com"
+              aria-invalid={fromEmailError}
+              className={fromEmailError ? "border-destructive ring-2 ring-destructive/20" : undefined}
               required
             />
           </div>
@@ -155,8 +192,14 @@ export function ContactFormDialog({
             <Input
               id="contact-subject"
               value={subject}
-              onChange={(e) => setSubject(e.target.value)}
+              onChange={(e) => {
+                const next = e.target.value
+                setSubject(next)
+                if (subjectError && next.trim()) setSubjectError(false)
+              }}
               placeholder="Np. Pytanie o dostawę"
+              aria-invalid={subjectError}
+              className={subjectError ? "border-destructive ring-2 ring-destructive/20" : undefined}
               required
             />
           </div>
@@ -166,9 +209,18 @@ export function ContactFormDialog({
             <Textarea
               id="contact-message"
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e) => {
+                const next = e.target.value
+                setMessage(next)
+                if (messageError && next.trim()) setMessageError(false)
+              }}
               placeholder="Opisz, w czym możemy pomóc"
-              className="min-h-28"
+              aria-invalid={messageError}
+              className={
+                messageError
+                  ? "min-h-28 border-destructive ring-2 ring-destructive/20"
+                  : "min-h-28"
+              }
               required
             />
           </div>

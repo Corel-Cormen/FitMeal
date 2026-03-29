@@ -7,6 +7,10 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react"
 
+const HAS_PURCHASED_DIET_KEY = "fitmeal_hasPurchasedDiet"
+const PENDING_NAME_KEY = "fitmeal_pendingProfileName"
+const PENDING_EMAIL_KEY = "fitmeal_pendingProfileEmail"
+
 export function LoginSection() {
   const [isLogin, setIsLogin] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
@@ -47,7 +51,17 @@ export function LoginSection() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log("Form submitted:", { email, password, name, isLogin })
-    router.push("/dashboard")
+
+    if (isLogin) {
+      localStorage.setItem(HAS_PURCHASED_DIET_KEY, "true")
+      router.push("/dashboard")
+      return
+    }
+
+    localStorage.setItem(HAS_PURCHASED_DIET_KEY, "false")
+    localStorage.setItem(PENDING_NAME_KEY, name.trim())
+    localStorage.setItem(PENDING_EMAIL_KEY, email.trim())
+    router.push("/onboarding")
   }
 
   return (

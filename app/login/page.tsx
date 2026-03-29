@@ -12,6 +12,8 @@ import { LiveChat } from "@/components/live-chat"
 import { errorToastStyle, successToastStyle } from "@/lib/sonner-toast"
 
 const HAS_PURCHASED_DIET_KEY = "fitmeal_hasPurchasedDiet"
+const PENDING_NAME_KEY = "fitmeal_pendingProfileName"
+const PENDING_EMAIL_KEY = "fitmeal_pendingProfileEmail"
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true)
@@ -90,6 +92,8 @@ export default function LoginPage() {
     if (isSubmitting) return
     if (!validate()) return
 
+    const trimmedEmail = email.trim()
+
     setIsSubmitting(true)
 
     setTimeout(() => {
@@ -101,10 +105,12 @@ export default function LoginPage() {
         localStorage.setItem(HAS_PURCHASED_DIET_KEY, "true")
       } else {
         localStorage.setItem(HAS_PURCHASED_DIET_KEY, "false")
+        localStorage.setItem(PENDING_NAME_KEY, name.trim())
+        localStorage.setItem(PENDING_EMAIL_KEY, trimmedEmail)
       }
 
       setIsSubmitting(false)
-      router.push(isLogin ? "/dashboard" : "/dashboard/start")
+      router.push(isLogin ? "/dashboard" : "/onboarding")
     }, 800)
   }
 
@@ -128,7 +134,7 @@ export default function LoginPage() {
       }
 
       setIsSubmitting(false)
-      router.push(isLogin ? "/dashboard" : "/dashboard/start")
+      router.push(isLogin ? "/dashboard" : "/onboarding")
     }, 800)
   }
 
