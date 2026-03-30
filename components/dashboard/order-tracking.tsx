@@ -1,13 +1,12 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import dynamic from "next/dynamic"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { toastSuccess } from "@/lib/sonner-toast"
 import {
   ChefHat,
@@ -17,12 +16,14 @@ import {
   CheckCircle2,
   Clock,
   Phone,
-  MessageCircle,
   Navigation,
   RefreshCw,
-  Send,
-  X
 } from "lucide-react"
+
+const WarsawRouteMap = dynamic(
+  () => import("@/components/maps/warsaw-route-map").then((m) => m.WarsawRouteMap),
+  { ssr: false },
+)
 
 type OrderStatus = "preparing" | "packing" | "delivering" | "delivered"
 
@@ -32,6 +33,7 @@ interface Order {
   status: OrderStatus
   meals: string[]
   deliveryTime: string
+  city: string
   driver?: {
     name: string
     phone: string
@@ -46,6 +48,7 @@ const mockOrders: Order[] = [
     id: "FIT-2026-001",
     date: "Dzisiaj",
     status: "delivering",
+    city: "Warszawa",
     meals: ["Owsianka proteinowa", "Wrap z indykiem", "Power Bowl", "Baton proteinowy", "Sałatka Proteinowa"],
     deliveryTime: "12:00 - 14:00",
     driver: {
@@ -60,6 +63,7 @@ const mockOrders: Order[] = [
     id: "FIT-2026-002",
     date: "Jutro",
     status: "preparing",
+    city: "Warszawa",
     meals: ["Jajecznica z awokado", "Serek z owocami", "Stek z lososiem", "Orzechy mix", "Keto Plate"],
     deliveryTime: "06:00 - 08:00",
     progress: 20
@@ -68,222 +72,13 @@ const mockOrders: Order[] = [
     id: "FIT-2026-003",
     date: "Pojutrze",
     status: "preparing",
+    city: "Warszawa",
     meals: ["Smoothie bowl", "Jogurt grecki", "Buddha Bowl", "Hummus z warzywami", "Grillowany kurczak"],
     deliveryTime: "12:00 - 14:00",
     progress: 0
   }
 ]
 
-interface DriverMessage {
-  id: string
-  text: string
-  sender: "user" | "driver"
-  timestamp: Date
-}
-
-const driverQuickReplies = [
-  "Gdzie jesteś?",
-  "Ile jeszcze czasu?",
-  "Czy mogę zmienić adres dostawy?",
-  "Mam problem z dostępem",
-]
-
-const driverResponses: Record<string, string> = {
-  "gdzie jesteś":
-    "Jestem w drodze do Ciebie! Według GPS jestem około 5-10 minut od Twojego adresu. Śledź mnie na mapie w aplikacji.",
-
-  "ile jeszcze czasu":
-    "Według nawigacji powinienem dotrzeć za około 8 minut. Jeśli będę miał opóźnienie, natychmiast Cię poinformuję!",
-
-  "czy mogę zmienić adres dostawy":
-    "Jeśli jesteś jeszcze w domu, mogę zmienić adres dostawy. Proszę podaj nowy adres i kod do bramy jeśli jest potrzebny.",
-
-  "mam problem z dostępem":
-    "Rozumiem! Czy możesz opisać problem z dostępem? Czy to kod do bramy, domofon czy coś innego? Pomożę Ci to rozwiązać.",
-
-  default:
-    "Jasne, słyszę Cię! Zaraz sprawdzę i dam znać. Jeśli to coś pilnego, zadzwoń do mnie bezpośrednio.",
-}
-
-function DriverChat({ 
-  isOpen, 
-  onClose, 
-  driver 
-}: { 
-  isOpen: boolean
-  onClose: () => void
-  driver: { name: string; phone: string; photo: string }
-}) {
-  const [messages, setMessages] = useState<DriverMessage[]>([
-    {
-      id: "1",
-      text: `Cześć! Rozmawiasz z ${driver.name}, Twoim kierowcą dostawy. W czym mogę Ci pomóc?`,
-      sender: "driver",
-      timestamp: new Date(),
-    },
-  ])
-  const [inputValue, setInputValue] = useState("")
-  const [isTyping, setIsTyping] = useState(false)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
-
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
-
-  const handleSendMessage = (text: string) => {
-    if (!text.trim()) return
-
-    const userMessage: DriverMessage = {
-      id: Date.now().toString(),
-      text,
-      sender: "user",
-      timestamp: new Date(),
-    }
-
-    setMessages((prev) => [...prev, userMessage])
-    setInputValue("")
-    setIsTyping(true)
-
-    setTimeout(() => {
-      setIsTyping(false)
-
-      const lowerText = text.toLowerCase()
-      let responseText = driverResponses.default
-
-      for (const [key, value] of Object.entries(driverResponses)) {
-        if (key !== "default" && lowerText.includes(key)) {
-          responseText = value
-          break
-        }
-      }
-
-      const driverMessage: DriverMessage = {
-        id: (Date.now() + 1).toString(),
-        text: responseText,
-        sender: "driver",
-        timestamp: new Date(),
-      }
-
-      setMessages((prev) => [...prev, driverMessage])
-    }, 1500)
-  }
-
-  const handleQuickReply = (reply: string) => {
-    handleSendMessage(reply)
-  }
-
-  return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={driver.photo} />
-              <AvatarFallback>{driver.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="font-semibold">{driver.name}</p>
-              <p className="text-sm text-muted-foreground">Kierowca dostawy</p>
-            </div>
-          </DialogTitle>
-        </DialogHeader>
-
-        <div className="flex flex-col h-96">
-          <div className="flex-1 overflow-y-auto space-y-3 p-4">
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex gap-3 ${message.sender === "user" ? "justify-end" : "justify-start"}`}
-              >
-                {message.sender === "driver" && (
-                  <Avatar className="h-8 w-8 flex-shrink-0">
-                    <AvatarImage src={driver.photo} />
-                    <AvatarFallback className="text-xs">
-                      {driver.name.split(' ').map(n => n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
-                )}
-                <div
-                  className={`max-w-[70%] rounded-lg px-3 py-2 text-sm ${
-                    message.sender === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-foreground"
-                  }`}
-                >
-                  {message.text}
-                </div>
-                {message.sender === "user" && (
-                  <Avatar className="h-8 w-8 flex-shrink-0">
-                    <AvatarFallback className="text-xs">TY</AvatarFallback>
-                  </Avatar>
-                )}
-              </div>
-            ))}
-            {isTyping && (
-              <div className="flex gap-3 justify-start">
-                <Avatar className="h-8 w-8 flex-shrink-0">
-                  <AvatarImage src={driver.photo} />
-                  <AvatarFallback className="text-xs">
-                    {driver.name.split(' ').map(n => n[0]).join('')}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="bg-secondary rounded-lg px-3 py-2 text-sm">
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" />
-                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
-                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
-                  </div>
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-
-          {messages.length < 4 && (
-            <div className="border-t p-3">
-              <p className="mb-2 text-xs text-muted-foreground">Szybkie odpowiedzi:</p>
-              <div className="flex flex-wrap gap-2">
-                {driverQuickReplies.map((reply) => (
-                  <Badge
-                    key={reply}
-                    variant="outline"
-                    className="cursor-pointer hover:bg-secondary text-xs"
-                    onClick={() => handleQuickReply(reply)}
-                  >
-                    {reply}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="border-t p-3">
-            <div className="flex gap-2">
-              <Input
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Napisz wiadomość..."
-                onKeyPress={(e) => e.key === "Enter" && handleSendMessage(inputValue)}
-                className="flex-1"
-              />
-              <Button
-                size="sm"
-                onClick={() => handleSendMessage(inputValue)}
-                disabled={!inputValue.trim()}
-              >
-                <Send className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  )
-}
 
 const statusConfig = {
   preparing: {
@@ -322,8 +117,6 @@ const statusSteps = [
 function LiveTrackingCard({ order }: { order: Order }) {
   const [currentProgress, setCurrentProgress] = useState(order.progress)
   const [eta, setEta] = useState(order.estimatedArrival)
-  const [isDriverChatOpen, setIsDriverChatOpen] = useState(false)
-  const [driverChatDriver, setDriverChatDriver] = useState<{ name: string; phone: string; photo: string } | null>(null)
 
   useEffect(() => {
     if (order.status === "delivering") {
@@ -339,6 +132,7 @@ function LiveTrackingCard({ order }: { order: Order }) {
   }, [order.status])
 
   const currentStepIndex = statusSteps.findIndex(s => s.status === order.status)
+  const isWarsaw = order.city.toLowerCase() === "warszawa"
 
   return (
     <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">
@@ -419,18 +213,6 @@ function LiveTrackingCard({ order }: { order: Order }) {
                   >
                     <Phone className="h-4 w-4" />
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                      if (order.driver) {
-                        setDriverChatDriver(order.driver)
-                        setIsDriverChatOpen(true)
-                      }
-                    }}
-                  >
-                    <MessageCircle className="h-4 w-4" />
-                  </Button>
                 </div>
               </div>
             </div>
@@ -446,10 +228,32 @@ function LiveTrackingCard({ order }: { order: Order }) {
                   <Navigation className="h-4 w-4" />
                   <span>Szacowany czas: <strong className="text-foreground">{eta}</strong></span>
                 </div>
-                <Button variant="ghost" size="sm" className="text-primary">
-                  <MapPin className="mr-1 h-4 w-4" />
-                  Zobacz na mapie
-                </Button>
+                {isWarsaw && (
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="text-primary"
+                      >
+                        <MapPin className="mr-1 h-4 w-4" />
+                        Zobacz na mapie
+                      </Button>
+                    </DialogTrigger>
+
+                    <DialogContent className="sm:max-w-3xl max-h-[calc(100vh-2rem)] overflow-hidden">
+                      <DialogHeader>
+                        <DialogTitle>Podgląd drogi kuriera</DialogTitle>
+                        <DialogDescription>
+                          Warszawa — wizualizacja trasy kuriera (orientacyjnie).
+                        </DialogDescription>
+                      </DialogHeader>
+
+                          <WarsawRouteMap eta={eta} />
+                    </DialogContent>
+                  </Dialog>
+                )}
               </div>
             </div>
           </>
@@ -467,16 +271,6 @@ function LiveTrackingCard({ order }: { order: Order }) {
         </div>
       </CardContent>
 
-      {driverChatDriver && (
-        <DriverChat
-          isOpen={isDriverChatOpen}
-          onClose={() => {
-            setIsDriverChatOpen(false)
-            setDriverChatDriver(null)
-          }}
-          driver={driverChatDriver}
-        />
-      )}
     </Card>
   )
 }

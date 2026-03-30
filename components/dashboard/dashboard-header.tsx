@@ -4,7 +4,6 @@ import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ThemeToggle } from "@/components/theme-toggle"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -26,18 +25,16 @@ import {
   Heart,
   HelpCircle
 } from "lucide-react"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet"
 import { NotificationsPanel } from "./notifications-panel"
-import { UserSettings } from "./user-settings"
-import { HelpCenter } from "./help-center"
 
 const navItems = [
   { label: "Panel", href: "/dashboard", icon: Home },
-  { label: "Wybierz dietę", href: "/dashboard/start", icon: Salad },
   { label: "Plan tygodnia", href: "/dashboard#plan", icon: CalendarDays },
-  { label: "Moje zamowienia", href: "/dashboard#tracking", icon: Package },
+  { label: "Moje zamówienia", href: "/dashboard#tracking", icon: Package },
   { label: "Preferencje", href: "/dashboard#preferences", icon: Heart },
-  { label: "FAQ", href: "/dashboard/faq", icon: HelpCircle },
+  { label: "Wybierz dietę", href: "/dashboard/start", icon: Salad },
+  { label: "Pomoc", href: "/dashboard/faq", icon: HelpCircle },
 ]
 
 interface DashboardHeaderProps {
@@ -65,7 +62,7 @@ export function DashboardHeader({
                 alt="FitMeal Logo"
                 width={36}
                 height={36}
-                className="h-9 w-9 rounded-xl object-cover"
+                className="h-9 w-9 object-cover"
               />
               <span className="text-xl font-bold text-foreground">FitMeal</span>
             </Link>
@@ -85,9 +82,7 @@ export function DashboardHeader({
           </div>
 
           <div className="flex items-center gap-3">
-            <HelpCenter />
             <NotificationsPanel />
-            <ThemeToggle />
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -106,34 +101,16 @@ export function DashboardHeader({
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <UserSettings
-                    trigger={
-                      <button className="flex w-full items-center px-2 py-1.5 text-sm">
-                        <User className="mr-2 h-4 w-4" />
-                        Mój profil
-                      </button>
-                    }
-                  />
+                  <Link href="/dashboard/settings?tab=profile" className="flex w-full items-center px-2 py-1.5 text-sm">
+                    <User className="mr-2 h-4 w-4" />
+                    Mój profil
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <UserSettings
-                    trigger={
-                      <button className="flex w-full items-center px-2 py-1.5 text-sm">
-                        <Settings className="mr-2 h-4 w-4" />
-                        Ustawienia
-                      </button>
-                    }
-                  />
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <HelpCenter
-                    trigger={
-                      <button className="flex w-full items-center px-2 py-1.5 text-sm">
-                        <HelpCircle className="mr-2 h-4 w-4" />
-                        Pomoc
-                      </button>
-                    }
-                  />
+                  <Link href="/dashboard/settings?tab=preferences" className="flex w-full items-center px-2 py-1.5 text-sm">
+                    <Settings className="mr-2 h-4 w-4" />
+                    Ustawienia
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
@@ -152,6 +129,10 @@ export function DashboardHeader({
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-72">
+                <SheetHeader className="sr-only">
+                  <SheetTitle>Menu</SheetTitle>
+                  <SheetDescription>Nawigacja panelu użytkownika</SheetDescription>
+                </SheetHeader>
                 <nav className="mt-8 flex flex-col gap-2">
                   {navItems.map((item) => (
                     <Link

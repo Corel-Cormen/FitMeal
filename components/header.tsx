@@ -19,7 +19,7 @@ export function Header() {
             alt="FitMeal Logo"
             width={36}
             height={36}
-            className="h-9 w-9 rounded-lg object-cover"
+            className="h-9 w-9 object-cover"
           />
           <span className="text-xl font-bold text-foreground">FitMeal</span>
         </Link>

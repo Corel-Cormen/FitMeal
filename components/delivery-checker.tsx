@@ -258,7 +258,7 @@ export function DeliveryChecker() {
                             </div>
                           )}
                           <Button className="mt-6 gap-2" asChild>
-                            <Link href="/login?mode=register">
+                            <Link href="/login?mode=login">
                               Zamów teraz
                               <ChevronRight className="h-4 w-4" />
                             </Link>
@@ -276,8 +276,8 @@ export function DeliveryChecker() {
                             </div>
                           ) : (
                             <div className="mt-4 flex gap-2">
-                              <Input 
-                                placeholder="Twój email" 
+                              <Input
+                                placeholder="Twój email"
                                 className={`max-w-xs ${
                                   notifyEmailErrors[`soon-${result.city}`]
                                     ? "border-destructive ring-2 ring-destructive/20"
@@ -472,14 +472,14 @@ export function DeliveryChecker() {
                         />
                       </div>
                       <div className="flex gap-3 pt-4">
-                        <Button 
-                          variant="outline" 
+                        <Button
+                          variant="outline"
                           onClick={() => setIsReportDialogOpen(false)}
                           className="flex-1"
                         >
                           Anuluj
                         </Button>
-                        <Button 
+                        <Button
                           onClick={handleReportCitySubmit}
                           disabled={isSubmittingReport}
                           className="flex-1"

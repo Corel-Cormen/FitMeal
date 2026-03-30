@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { toastSuccess } from "@/lib/sonner-toast"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -8,13 +8,6 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import {
   Plus,
   X,
@@ -26,8 +19,7 @@ import {
   Wheat,
   Fish,
   Egg,
-  Nut,
-  Clock
+  Nut
 } from "lucide-react"
 import {
   Dialog,
@@ -60,30 +52,19 @@ const availableAllergens = [
 ]
 
 const availableIngredients = [
-  "Kurczak", "Wolowina", "Wieprzowina", "Indyk", "Losos", "Tunczyk", "Krewetki",
-  "Ryz", "Makaron", "Ziemniaki", "Quinoa", "Kasza gryczana", "Bulgur",
-  "Brokuly", "Szpinak", "Pomidory", "Papryka", "Cukinia", "Baklazan",
+  "Kurczak", "Wołowina", "Wieprzowina", "Indyk", "Łosoś", "Tuńczyk", "Krewetki",
+  "Ryż", "Makaron", "Ziemniaki", "Quinoa", "Kasza gryczana", "Bulgur",
+  "Brokuły", "Szpinak", "Pomidory", "Papryka", "Cukinia", "Bakłażan",
   "Awokado", "Jajka", "Tofu", "Ser feta", "Mozzarella", "Parmezan",
   "Ciecierzyca", "Fasola", "Soczewica", "Edamame", "Groszek",
-  "Orzechy wloskie", "Migdaly", "Orzechy nerkowca", "Pestki slonecznika"
-]
-
-const DELIVERY_WINDOW_KEY = "fitmeal_delivery_window"
-
-const deliveryWindows = [
-  { value: "06:00 - 08:00", label: "06:00 - 08:00" },
-  { value: "08:00 - 10:00", label: "08:00 - 10:00" },
-  { value: "10:00 - 12:00", label: "10:00 - 12:00" },
-  { value: "12:00 - 14:00", label: "12:00 - 14:00" },
-  { value: "14:00 - 16:00", label: "14:00 - 16:00" },
+  "Orzechy włoskie", "Migdały", "Orzechy nerkowca", "Pestki słonecznika"
 ]
 
 export function PreferencesPanel() {
   const [excludedAllergens, setExcludedAllergens] = useState<string[]>(["laktoza", "orzechy"])
-  const [favoriteIngredients, setFavoriteIngredients] = useState<string[]>(["Kurczak", "Losos", "Awokado", "Brokuly"])
-  const [excludedIngredients, setExcludedIngredients] = useState<string[]>(["Wieprzowina", "Baklazan"])
+  const [favoriteIngredients, setFavoriteIngredients] = useState<string[]>(["Kurczak", "Łosoś", "Awokado", "Brokuły"])
+  const [excludedIngredients, setExcludedIngredients] = useState<string[]>(["Wieprzowina", "Bakłażan"])
   const [searchQuery, setSearchQuery] = useState("")
-  const [deliveryWindow, setDeliveryWindow] = useState(deliveryWindows[1].value)
 
   const [dietPreferences, setDietPreferences] = useState({
     vegetarian: false,
@@ -94,16 +75,8 @@ export function PreferencesPanel() {
     highProtein: true,
   })
 
-  useEffect(() => {
-    if (typeof window === "undefined") return
-    const saved = localStorage.getItem(DELIVERY_WINDOW_KEY)
-    if (saved && deliveryWindows.some((w) => w.value === saved)) {
-      setDeliveryWindow(saved)
-    }
-  }, [])
-
   const toggleAllergen = (id: string) => {
-    setExcludedAllergens(prev => 
+    setExcludedAllergens(prev =>
       prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id]
     )
   }
@@ -137,9 +110,6 @@ export function PreferencesPanel() {
   )
 
   const handleSavePreferences = () => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem(DELIVERY_WINDOW_KEY, deliveryWindow)
-    }
     toastSuccess("Preferencje zostały pomyślnie zapisane!", {
       description: "Twoje ustawienia zostały zaktualizowane.",
       duration: 3000,
@@ -150,30 +120,29 @@ export function PreferencesPanel() {
     <section id="preferences" className="scroll-mt-20">
       <Card className="border-border/50">
         <CardHeader>
-          <CardTitle className="text-xl">Preferencje zywieniowe</CardTitle>
+          <CardTitle className="text-xl">Preferencje żywieniowe</CardTitle>
           <CardDescription>
-            Dostosuj swoja diete do swoich potrzeb i preferencji
+            Dostosuj swoją dietę do swoich potrzeb i preferencji
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="diet" className="w-full">
-            <TabsList className="mb-6 grid w-full grid-cols-4">
+            <TabsList className="mb-6 grid w-full grid-cols-3">
               <TabsTrigger value="diet">Dieta</TabsTrigger>
-              <TabsTrigger value="delivery">Dostawa</TabsTrigger>
               <TabsTrigger value="allergens">Alergeny</TabsTrigger>
-              <TabsTrigger value="ingredients">Skladniki</TabsTrigger>
+              <TabsTrigger value="ingredients">Składniki</TabsTrigger>
             </TabsList>
 
             <TabsContent value="diet" className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 {Object.entries(dietPreferences).map(([key, value]) => {
                   const labels: { [key: string]: { title: string, desc: string } } = {
-                    vegetarian: { title: "Wegetarianska", desc: "Bez miesa" },
-                    vegan: { title: "Weganska", desc: "Bez produktow odzwierzecych" },
-                    glutenFree: { title: "Bez glutenu", desc: "Dla osob z celiakia" },
-                    lactoseFree: { title: "Bez laktozy", desc: "Bez nabialau" },
-                    keto: { title: "Keto", desc: "Nisko weglowodanowa" },
-                    highProtein: { title: "High Protein", desc: "Wysoko bialkowa" },
+                    vegetarian: { title: "Wegetariańska", desc: "Bez mięsa" },
+                    vegan: { title: "Wegańska", desc: "Bez produktów odzwierzęcych" },
+                    glutenFree: { title: "Bez glutenu", desc: "Dla osób z celiakią" },
+                    lactoseFree: { title: "Bez laktozy", desc: "Bez nabiału" },
+                    keto: { title: "Keto", desc: "Nisko węglowodanowa" },
+                    highProtein: { title: "High Protein", desc: "Wysoko białkowa" },
                   }
                   return (
                     <div
@@ -206,41 +175,6 @@ export function PreferencesPanel() {
               </div>
             </TabsContent>
 
-            <TabsContent value="delivery" className="space-y-4">
-              <div className="rounded-xl border border-border/50 bg-card p-4">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
-                    <Clock className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-foreground">Godzina dostawy</p>
-                    <p className="text-sm text-muted-foreground">
-                      Wybierz preferowane okno dostawy. Zmiany zastosują się do kolejnych dostaw.
-                    </p>
-
-                    <div className="mt-4 grid gap-2 sm:max-w-sm">
-                      <Label htmlFor="delivery-window">Okno dostawy</Label>
-                      <Select value={deliveryWindow} onValueChange={setDeliveryWindow}>
-                        <SelectTrigger id="delivery-window">
-                          <SelectValue placeholder="Wybierz okno" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {deliveryWindows.map((w) => (
-                            <SelectItem key={w.value} value={w.value}>
-                              {w.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <p className="text-xs text-muted-foreground">
-                        Aktualnie ustawione: <span className="font-medium text-foreground">{deliveryWindow}</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-
             <TabsContent value="allergens" className="space-y-4">
               <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
                 <div className="flex items-start gap-3">
@@ -248,7 +182,7 @@ export function PreferencesPanel() {
                   <div>
                     <p className="font-medium text-foreground">Informacja o alergenach</p>
                     <p className="text-sm text-muted-foreground">
-                      Zaznacz alergeny, ktorych chcesz unikac. Posilki zawierajace te skladniki nie beda uwzgledniane w Twoim menu.
+                      Zaznacz alergeny, których chcesz unikać. Posiłki zawierające te składniki nie będą uwzględniane w Twoim menu.
                     </p>
                   </div>
                 </div>
@@ -356,7 +290,7 @@ export function PreferencesPanel() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Ban className="h-5 w-5 text-destructive" />
-                    <h3 className="font-semibold text-foreground">Wykluczone skladniki</h3>
+                    <h3 className="font-semibold text-foreground">Wykluczone składniki</h3>
                   </div>
                   <Dialog>
                     <DialogTrigger asChild>
@@ -367,13 +301,13 @@ export function PreferencesPanel() {
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>Wyklucz skladnik</DialogTitle>
+                        <DialogTitle>Wyklucz składnik</DialogTitle>
                         <DialogDescription>
-                          Wybierz skladniki, ktorych nie chcesz widziec w swoich posilkach
+                          Wybierz składniki, których nie chcesz widzieć w swoich posiłkach
                         </DialogDescription>
                       </DialogHeader>
                       <Input
-                        placeholder="Szukaj skladnika..."
+                        placeholder="Szukaj składnika..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                       />

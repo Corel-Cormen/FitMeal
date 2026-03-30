@@ -496,7 +496,7 @@ export function PurchaseDietPanel({ onPurchase }: PurchaseDietPanelProps) {
                 <div className="grid gap-2">
                   <Label>Numer telefonu</Label>
                   <div className="text-sm font-medium text-foreground bg-background/50 px-3 py-2 rounded-md border">
-                    +48 600 700 800
+                    +48 123 456 789
                   </div>
                 </div>
               </div>

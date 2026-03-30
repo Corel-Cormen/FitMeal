@@ -7,6 +7,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
+import { useLiveChat } from "@/components/live-chat"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import {
   Accordion,
   AccordionContent,
@@ -42,6 +50,7 @@ import {
   Sparkles,
   HelpCircle,
   ExternalLink,
+  Play,
 } from "lucide-react"
 
 const faqCategories = [
@@ -52,34 +61,34 @@ const faqCategories = [
     color: "bg-blue-500",
     questions: [
       {
-        q: "Jak moge zlozyc zamowienie?",
-        a: "Aby zlozyc zamowienie, przejdz do panelu zakupu diety. Wybierz typ diety, liczbe kalorii, plan cenowy i okres trwania. Po zakonczeniu procesu zamowienia otrzymasz potwierdzenie na email oraz w aplikacji.",
+        q: "Jak mogę złożyć zamówienie?",
+        a: "Aby złożyć zamówienie, przejdź do panelu zakupu diety. Wybierz typ diety, liczbę kalorii, plan cenowy i okres trwania. Po zakończeniu procesu zamówienia otrzymasz potwierdzenie na email oraz w aplikacji.",
         helpful: 142,
-        related: ["Jak zmienic zamowienie?", "Jak anulowac zamowienie?"]
+        related: ["Jak zmienić zamówienie?", "Jak anulować zamówienie?"]
       },
       {
-        q: "Czy moge zmienic zamowienie po jego zlozeniu?",
-        a: "Tak, mozesz wprowadzac zmiany do zamowienia do godziny 18:00 dnia poprzedzajacego dostawe. Zmiany mozesz wprowadzic w sekcji 'Plan tygodnia' klikajac na konkretny posilek i wybierajac 'Zamien' lub 'Edytuj'.",
+        q: "Czy mogę zmienić zamówienie po jego złożeniu?",
+        a: "Tak, możesz wprowadzać zmiany do zamówienia do godziny 18:00 dnia poprzedzającego dostawę. Zmiany możesz wprowadzić w sekcji 'Plan tygodnia' klikając na konkretny posiłek i wybierając 'Zamień' lub 'Edytuj'.",
         helpful: 98,
-        related: ["Do kiedy moge zmienic menu?", "Jak dodac wlasne preferencje?"]
+        related: ["Do kiedy mogę zmienić menu?", "Jak dodać własne preferencje?"]
       },
       {
-        q: "Jak anulowac zamowienie?",
-        a: "Zamowienie mozesz anulowac do 48 godzin przed planowana dostawa. Wejdz w szczegoly zamowienia w sekcji 'Moje zamowienia' i kliknij 'Anuluj zamowienie'. Zwrot srodkow nastapi w ciagu 3-5 dni roboczych na konto, z ktorego dokonano platnosci.",
+        q: "Jak anulować zamówienie?",
+        a: "Zamówienie możesz anulować do 48 godzin przed planowaną dostawą. Wejdź w szczegóły zamówienia w sekcji 'Moje zamówienia' i kliknij 'Anuluj zamówienie'. Zwrot środków nastąpi w ciągu 3-5 dni roboczych na konto, z którego dokonano płatności.",
         helpful: 76,
-        related: ["Jak otrzymac zwrot?", "Czy moge wstrzymac dostawy?"]
+        related: ["Jak otrzymać zwrot?", "Czy mogę wstrzymać dostawy?"]
       },
       {
-        q: "O ktorej godzinie jest dostawa?",
-        a: "Dostawy realizujemy w godzinach 6:00-9:00 rano. Mozesz ustawic preferowane okno czasowe w Ustawieniach > Dostawa. Przed dostawa otrzymasz SMS z informacja o przyblizonej godzinie przyjazdu kuriera.",
+        q: "O której godzinie jest dostawa?",
+        a: "Dostawy realizujemy w godzinach 6:00-9:00 rano. Możesz ustawić preferowane okno czasowe w Ustawieniach > Dostawa. Przed dostawą otrzymasz SMS z informacją o przybliżonej godzinie przyjazdu kuriera.",
         helpful: 203,
-        related: ["Czy moge zmienic godzine dostawy?", "Co jesli nie ma mnie w domu?"]
+        related: ["Czy mogę zmienić godzinę dostawy?", "Co jeśli nie ma mnie w domu?"]
       },
       {
-        q: "Co jesli nie ma mnie w domu podczas dostawy?",
-        a: "Mozesz ustawic miejsce pozostawienia paczki (np. pod drzwiami, u sasiada, w paczkomacie). Kurier zrobi zdjecie potwierdzajace dostawe. Mozesz tez podac kod do domofonu i instrukcje dla kuriera.",
+        q: "Co jeśli nie ma mnie w domu podczas dostawy?",
+        a: "Możesz ustawić miejsce pozostawienia paczki (np. pod drzwiami, u sąsiada, w paczkomacie). Kurier zrobi zdjęcie potwierdzające dostawę. Możesz też podać kod do domofonu i instrukcje dla kuriera.",
         helpful: 167,
-        related: ["Jak zmienic adres dostawy?", "Czy kurier dzwoni przed dostawa?"]
+        related: ["Jak zmienić adres dostawy?", "Czy kurier dzwoni przed dostawą?"]
       },
     ]
   },
@@ -91,33 +100,33 @@ const faqCategories = [
     questions: [
       {
         q: "Jakie diety oferujecie?",
-        a: "Oferujemy 4 glowne typy diet: Masa (wysokokaloryczna dla osob budujacych mase miesniowa, 2500-4000 kcal), Redukcja (niskokaloryczna dla osob odchudzajacych sie, 1200-1800 kcal), Balans (zbilansowana dieta utrzymujaca, 1800-2200 kcal), Keto (dieta ketogeniczna, wysokotluszczowa, niskowiglowodanowa).",
+        a: "Oferujemy 4 główne typy diet: Masa (wysokokaloryczna dla osób budujących masę mięśniową, 2500-4000 kcal), Redukcja (niskokaloryczna dla osób odchudzających się, 1200-1800 kcal), Balans (zbilansowana dieta utrzymująca, 1800-2200 kcal), Keto (dieta ketogeniczna, wysokotłuszczowa, niskowęglowodanowa).",
         helpful: 312,
-        related: ["Ktora dieta dla mnie?", "Czy moge zmienic typ diety?"]
+        related: ["Która dieta dla mnie?", "Czy mogę zmienić typ diety?"]
       },
       {
-        q: "Czy moge dostosowac diete do moich preferencji?",
-        a: "Tak! W panelu preferencji mozesz: wybrac tryb diety (wegetarianska, weganska, bez glutenu), oznaczyc alergeny, wykluczyc skladniki ktorych nie lubisz, dodac ulubione produkty. System automatycznie dobierze posilki zgodne z Twoimi preferencjami.",
+        q: "Czy mogę dostosować dietę do moich preferencji?",
+        a: "Tak! W panelu preferencji możesz: wybrać tryb diety (wegetariańska, wegańska, bez glutenu), oznaczyć alergeny, wykluczyć składniki których nie lubisz, dodać ulubione produkty. System automatycznie dobierze posiłki zgodne z Twoimi preferencjami.",
         helpful: 245,
-        related: ["Jak dodac alergen?", "Gdzie zmieniam preferencje?"]
+        related: ["Jak dodać alergen?", "Gdzie zmieniam preferencje?"]
       },
       {
-        q: "Ile kalorii zawieraja posilki?",
-        a: "Kazdy posilek ma dokladnie wyliczone wartosci odzywcze. Mozesz wybrac dzienny limit kalorii od 1200 do 4000 kcal w krokach co 100 kcal. Szczegolowe informacje o kazdym posilku (kalorie, bialko, weglowodany, tluszcze, blonnik) znajdziesz w planie tygodniowym.",
+        q: "Ile kalorii zawierają posiłki?",
+        a: "Każdy posiłek ma dokładnie wyliczone wartości odżywcze. Możesz wybrać dzienny limit kalorii od 1200 do 4000 kcal w krokach co 100 kcal. Szczegółowe informacje o każdym posiłku (kalorie, białko, węglowodany, tłuszcze, błonnik) znajdziesz w planie tygodniowym.",
         helpful: 189,
-        related: ["Jak zmienic liczbe kalorii?", "Czy makra sa wyliczone?"]
+        related: ["Jak zmienić liczbę kalorii?", "Czy makra są wyliczone?"]
       },
       {
-        q: "Czy posilki sa swieze?",
-        a: "Tak, wszystkie posilki sa przygotowywane codziennie rano z swiezych, lokalnych skladnikow. Nie uzywamy konserwantow, sztucznych barwnikow ani wzmacniaczy smaku. Posilki nalezy spozyc w ciagu 48 godzin od dostawy - przechowuj je w lodowce.",
+        q: "Czy posiłki są świeże?",
+        a: "Tak, wszystkie posiłki są przygotowywane codziennie rano z świeżych, lokalnych składników. Nie używamy konserwantów, sztucznych barwników ani wzmacniaczy smaku. Posiłki należy spożyć w ciągu 48 godzin od dostawy - przechowuj je w lodówce.",
         helpful: 278,
-        related: ["Jak przechowywac posilki?", "Czy moge zamrozic posilki?"]
+        related: ["Jak przechowywać posiłki?", "Czy mogę zamrozić posiłki?"]
       },
       {
         q: "Czy oferujecie diety specjalistyczne?",
-        a: "Tak! Poza standardowymi dietami oferujemy rowniez: diete bezlaktozowa, bezglutenowa, weganska, dla diabetykow (indeks glikemiczny), dla osob z nadcisnieniem (niskosodowa). Skontaktuj sie z nami, jesli potrzebujesz indywidualnej diety.",
+        a: "Tak! Poza standardowymi dietami oferujemy również: dietę bezlaktozową, bezglutenową, wegańską, dla diabetyków (indeks glikemiczny), dla osób z nadciśnieniem (niskosodowa). Skontaktuj się z nami, jeśli potrzebujesz indywidualnej diety.",
         helpful: 134,
-        related: ["Jak zamowic diete specjalistyczna?", "Czy macie dietetyka?"]
+        related: ["Jak zamówić dietę specjalistyczną?", "Czy macie dietetyka?"]
       },
     ]
   },
@@ -128,28 +137,28 @@ const faqCategories = [
     color: "bg-purple-500",
     questions: [
       {
-        q: "Jakie metody platnosci akceptujecie?",
-        a: "Akceptujemy: karty platnicze (Visa, Mastercard, American Express), BLIK, szybkie przelewy online (PayU, Przelewy24, Tpay), platnosc przy odbiorze (gotowka lub karta), Apple Pay i Google Pay.",
+        q: "Jakie metody płatności akceptujecie?",
+        a: "Akceptujemy: karty płatnicze (Visa, Mastercard, American Express), BLIK, szybkie przelewy online (PayU, Przelewy24, Tpay), płatność przy odbiorze (gotówka lub karta), Apple Pay i Google Pay.",
         helpful: 156,
-        related: ["Czy moge placic przy odbiorze?", "Czy akceptujecie BLIK?"]
+        related: ["Czy mogę płacić przy odbiorze?", "Czy akceptujecie BLIK?"]
       },
       {
-        q: "Czy moge placic miesiecznie?",
-        a: "Tak, oferujemy elastyczne opcje platnosci. Mozesz oplacic caly okres z gory (z rabatem do 15%) lub rozlozyc platnosc na raty miesieczne bez dodatkowych kosztow. Raty 0% dostepne przy zamowieniach powyzej 500 zl.",
+        q: "Czy mogę płacić miesięcznie?",
+        a: "Tak, oferujemy elastyczne opcje płatności. Możesz opłacić cały okres z góry (z rabatem do 15%) lub rozłożyć płatność na raty miesięczne bez dodatkowych kosztów. Raty 0% dostępne przy zamówieniach powyżej 500 zł.",
         helpful: 123,
-        related: ["Jakie sa rabaty?", "Jak dziala platnosc ratalna?"]
+        related: ["Jakie są rabaty?", "Jak działa płatność ratalna?"]
       },
       {
-        q: "Jak otrzymam fakture?",
-        a: "Faktura VAT jest automatycznie generowana po kazdej platnosci i wysylana na Twoj adres email w ciagu 24 godzin. Mozesz tez pobrac wszystkie faktury z sekcji Ustawienia > Historia platnosci. Jesli potrzebujesz faktury na firme, uzupelnij dane firmy w ustawieniach.",
+        q: "Jak otrzymam fakturę?",
+        a: "Faktura VAT jest automatycznie generowana po każdej płatności i wysyłana na Twój adres email w ciągu 24 godzin. Możesz też pobrać wszystkie faktury z sekcji Ustawienia > Historia płatności. Jeśli potrzebujesz faktury na firmę, uzupełnij dane firmy w ustawieniach.",
         helpful: 89,
-        related: ["Jak pobrac fakture?", "Czy moge miec fakture na firme?"]
+        related: ["Jak pobrać fakturę?", "Czy mogę mieć fakturę na firmę?"]
       },
       {
-        q: "Co jesli platnosc sie nie powiodla?",
-        a: "Jesli platnosc sie nie powiodla, otrzymasz powiadomienie email i w aplikacji z instrukcja ponowienia platnosci. Masz 24 godziny na uregulowanie platnosci. Po tym czasie zamowienie zostanie wstrzymane do momentu zaksiegowania platnosci.",
+        q: "Co jeśli płatność się nie powiodła?",
+        a: "Jeśli płatność się nie powiodła, otrzymasz powiadomienie email i w aplikacji z instrukcją ponowienia płatności. Masz 24 godziny na uregulowanie płatności. Po tym czasie zamówienie zostanie wstrzymane do momentu zaksięgowania płatności.",
         helpful: 67,
-        related: ["Jak ponowic platnosc?", "Dlaczego platnosc nie przeszla?"]
+        related: ["Jak ponowić płatność?", "Dlaczego płatność nie przeszła?"]
       },
     ]
   },
@@ -160,28 +169,28 @@ const faqCategories = [
     color: "bg-orange-500",
     questions: [
       {
-        q: "Jak zmienic haslo?",
-        a: "Wejdz w Ustawienia > Profil > Bezpieczenstwo i kliknij 'Zmien haslo'. Bedziesz musial podac aktualne haslo oraz nowe haslo. Nowe haslo musi miec minimum 8 znakow, w tym co najmniej jedna cyfre i jeden znak specjalny.",
+        q: "Jak zmienić hasło?",
+        a: "Wejdź w Ustawienia > Profil > Bezpieczeństwo i kliknij 'Zmień hasło'. Będziesz musiał podać aktualne hasło oraz nowe hasło. Nowe hasło musi mieć minimum 8 znaków, w tym co najmniej jedną cyfrę i jeden znak specjalny.",
         helpful: 134,
-        related: ["Zapomnialem hasla", "Jak wlaczyc 2FA?"]
+        related: ["Zapomniałem hasła", "Jak włączyć 2FA?"]
       },
       {
-        q: "Jak usunac konto?",
-        a: "Aby usunac konto, wejdz w Ustawienia > Opcje > Usun konto. Pamietaj, ze ta operacja jest nieodwracalna - wszystkie Twoje dane, historia zamowien i preferencje zostana trwale usuniete. Przed usunieciem musisz anulowac wszystkie aktywne subskrypcje.",
+        q: "Jak usunąć konto?",
+        a: "Aby usunąć konto, wejdź w Ustawienia > Opcje > Usuń konto. Pamiętaj, że ta operacja jest nieodwracalna - wszystkie Twoje dane, historia zamówień i preferencje zostaną trwale usunięte. Przed usunięciem musisz anulować wszystkie aktywne subskrypcje.",
         helpful: 45,
-        related: ["Czy moge odzyskac konto?", "Co sie stanie z moimi danymi?"]
+        related: ["Czy mogę odzyskać konto?", "Co się stanie z moimi danymi?"]
       },
       {
-        q: "Jak zmienic adres dostawy?",
-        a: "Adres dostawy mozesz zmienic w Ustawieniach > Dostawa. Kliknij 'Edytuj' przy obecnym adresie lub 'Dodaj nowy adres'. Zmiana adresu wejdzie w zycie od nastepnej dostawy. Mozesz miec do 3 zapisanych adresow.",
+        q: "Jak zmienić adres dostawy?",
+        a: "Adres dostawy możesz zmienić w Ustawieniach > Dostawa. Kliknij 'Edytuj' przy obecnym adresie lub 'Dodaj nowy adres'. Zmiana adresu wejdzie w życie od następnej dostawy. Możesz mieć do 3 zapisanych adresów.",
         helpful: 187,
-        related: ["Czy moge miec kilka adresow?", "Jak ustawic domyslny adres?"]
+        related: ["Czy mogę mieć kilka adresów?", "Jak ustawić domyślny adres?"]
       },
       {
-        q: "Jak wstrzymac subskrypcje na czas urlopu?",
-        a: "W sekcji Plan tygodnia mozesz oznaczyc konkretne dni jako 'bez dostawy'. Mozesz tez tymczasowo zawiesic cala subskrypcje w Ustawieniach > Subskrypcja > Wstrzymaj. Subskrypcja zostanie wznowiona automatycznie po wybranym okresie.",
+        q: "Jak wstrzymać subskrypcję na czas urlopu?",
+        a: "W sekcji Plan tygodnia możesz oznaczyć konkretne dni jako 'bez dostawy'. Możesz też tymczasowo zawiesić całą subskrypcję w Ustawieniach > Subskrypcja > Wstrzymaj. Subskrypcja zostanie wznowiona automatycznie po wybranym okresie.",
         helpful: 156,
-        related: ["Na jak dlugo moge wstrzymac?", "Czy strace niewykorzystane dni?"]
+        related: ["Na jak długo mogę wstrzymać?", "Czy stracę niewykorzystane dni?"]
       },
     ]
   },
@@ -195,13 +204,13 @@ const videoGuides = [
     views: 12453,
   },
   {
-    title: "Jak zaplanowac tygodniowe menu",
+    title: "Jak zaplanować tygodniowe menu",
     duration: "5:12",
     thumbnail: "https://images.unsplash.com/photo-1547592180-85f173990554?w=300&h=200&fit=crop",
     views: 8921,
   },
   {
-    title: "Sledzenie dostawy krok po kroku",
+    title: "Śledzenie dostawy krok po kroku",
     duration: "2:45",
     thumbnail: "https://images.unsplash.com/photo-1526367790999-0150786686a2?w=300&h=200&fit=crop",
     views: 6234,
@@ -217,43 +226,46 @@ const videoGuides = [
 const quickGuides = [
   {
     title: "Pierwsze kroki",
-    description: "Jak rozpoczac przygode z FitMeal",
+    description: "Jak rozpocząć przygodę z FitMeal",
     icon: BookOpen,
     steps: [
-      "Wybierz plan dietetyczny dopasowany do Twoich celow",
-      "Ustaw preferencje zywieniowe i wyklucz alergeny",
+      "Wybierz plan dietetyczny dopasowany do Twoich celów",
+      "Ustaw preferencje żywieniowe i wyklucz alergeny",
       "Podaj adres dostawy i wybierz preferowane godziny",
-      "Dokonaj platnosci i czekaj na pierwsza dostawe"
+      "Dokonaj płatności i czekaj na pierwszą dostawę"
     ]
   },
   {
-    title: "Planowanie posilkow",
-    description: "Jak korzystac z planera tygodniowego",
+    title: "Planowanie posiłków",
+    description: "Jak korzystać z planera tygodniowego",
     icon: FileText,
     steps: [
-      "Przejdz do sekcji 'Plan tygodnia' w panelu",
-      "Kliknij na dzien, ktory chcesz edytowac",
-      "Dodaj, zamien lub usun posilki wedlug preferencji",
-      "Zapisz zmiany przed godzina 18:00 poprzedniego dnia"
+      "Przejdź do sekcji 'Plan tygodnia' w panelu",
+      "Kliknij na dzień, który chcesz edytować",
+      "Dodaj, zamień lub usuń posiłki według preferencji",
+      "Zapisz zmiany przed godziną 18:00 poprzedniego dnia"
     ]
   },
   {
-    title: "Sledzenie dostawy",
-    description: "Jak sledzic swoje zamowienie w czasie rzeczywistym",
+    title: "Śledzenie dostawy",
+    description: "Jak śledzić swoje zamówienie w czasie rzeczywistym",
     icon: Truck,
     steps: [
-      "Przejdz do sekcji 'Moje zamowienia'",
-      "Kliknij na aktywne zamowienie aby zobaczyc szczegoly",
-      "Sledz status dostawy na mapie w czasie rzeczywistym",
-      "Skontaktuj sie z kierowca przez aplikacje w razie potrzeby"
+      "Przejdź do sekcji 'Moje zamówienia'",
+      "Kliknij na aktywne zamówienie aby zobaczyć szczegóły",
+      "Śledź status dostawy na mapie w czasie rzeczywistym",
+      "Skontaktuj się z kierowcą przez aplikację w razie potrzeby"
     ]
   },
 ]
 
 export default function FAQPage() {
+  const { setIsOpen, setIsMinimized } = useLiveChat()
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [helpfulVotes, setHelpfulVotes] = useState<Record<string, boolean>>({})
+  const [videoDialogOpen, setVideoDialogOpen] = useState(false)
+  const [activeVideo, setActiveVideo] = useState<(typeof videoGuides)[number] | null>(null)
   const [contactForm, setContactForm] = useState({
     topic: "",
     message: "",
@@ -305,10 +317,10 @@ export default function FAQPage() {
         <div className="mx-auto max-w-4xl">
           <div className="mb-8 text-center">
             <h2 className="text-3xl font-bold text-foreground">
-              Jak mozemy Ci <span className="text-primary">pomoc</span>?
+              Jak możemy Ci <span className="text-primary">pomóc</span>?
             </h2>
             <p className="mt-2 text-muted-foreground">
-              Przeszukaj baze wiedzy lub wybierz kategorie ponizej
+              Przeszukaj bazę wiedzy lub wybierz kategorię poniżej
             </p>
           </div>
 
@@ -330,7 +342,7 @@ export default function FAQPage() {
                 className="absolute right-2 top-1/2 -translate-y-1/2"
                 onClick={() => setSearchQuery("")}
               >
-                Wyczysc
+                Wyczyść
               </Button>
             )}
           </div>
@@ -425,7 +437,7 @@ export default function FAQPage() {
 
                           <div className="flex items-center justify-between border-t border-border pt-4">
                             <p className="text-sm text-muted-foreground">
-                              Czy ta odpowiedz byla pomocna?
+                              Czy ta odpowiedź była pomocna?
                             </p>
                             <div className="flex items-center gap-2">
                               <Button
@@ -457,12 +469,12 @@ export default function FAQPage() {
                 <Card className="py-12 text-center">
                   <CardContent>
                     <Search className="mx-auto mb-4 h-12 w-12 text-muted-foreground/50" />
-                    <p className="text-lg font-medium">Nie znaleziono wynikow</p>
+                    <p className="text-lg font-medium">Nie znaleziono wyników</p>
                     <p className="mt-1 text-muted-foreground">
-                      Sprobuj innych slow kluczowych lub skontaktuj sie z nami
+                      Spróbuj innych słów kluczowych lub skontaktuj się z nami
                     </p>
                     <Button className="mt-4" onClick={() => setSearchQuery("")}>
-                      Wyczysc wyszukiwanie
+                      Wyczyść wyszukiwanie
                     </Button>
                   </CardContent>
                 </Card>
@@ -477,7 +489,7 @@ export default function FAQPage() {
                   <h3 className="text-xl font-semibold">Popularne pytania</h3>
                   <Badge variant="secondary" className="gap-1">
                     <Sparkles className="h-3 w-3" />
-                    Najczesciej wyszukiwane
+                    Najczęściej wyszukiwane
                   </Badge>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -501,45 +513,92 @@ export default function FAQPage() {
                     ))}
                 </div>
               </div>
+            </>
+          )}
 
-              <div className="mb-12">
-                <div className="mb-6 flex items-center justify-between">
-                  <h3 className="text-xl font-semibold">Poradniki wideo</h3>
-                  <Button variant="ghost" size="sm" className="gap-1">
-                    Zobacz wszystkie
-                    <ExternalLink className="h-4 w-4" />
-                  </Button>
-                </div>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                  {videoGuides.map((video, idx) => (
-                    <Card key={idx} className="cursor-pointer overflow-hidden transition-shadow hover:shadow-md">
-                      <div className="relative">
-                        <img
-                          src={video.thumbnail}
-                          alt={video.title}
-                          className="aspect-video w-full object-cover"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                          <div className="rounded-full bg-white/90 p-3">
-                            <Video className="h-6 w-6 text-primary" />
-                          </div>
-                        </div>
-                        <Badge className="absolute bottom-2 right-2 bg-black/70">
-                          {video.duration}
-                        </Badge>
+          <div className="mb-12">
+            <div className="mb-6 flex items-center justify-between">
+              <h3 className="text-xl font-semibold">Poradniki wideo</h3>
+              <Button variant="ghost" size="sm" className="gap-1">
+                Zobacz wszystkie
+                <ExternalLink className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {videoGuides.map((video, idx) => (
+                <Card
+                  key={idx}
+                  className="cursor-pointer overflow-hidden transition-shadow hover:shadow-md"
+                  onClick={() => {
+                    setActiveVideo(video)
+                    setVideoDialogOpen(true)
+                  }}
+                >
+                  <div className="relative">
+                    <img
+                      src={video.thumbnail}
+                      alt={video.title}
+                      className="aspect-video w-full object-cover"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                      <div className="rounded-full bg-white/90 p-3">
+                        <Video className="h-6 w-6 text-primary" />
                       </div>
-                      <CardContent className="p-3">
-                        <p className="line-clamp-2 text-sm font-medium">{video.title}</p>
-                        <p className="mt-1 text-xs text-muted-foreground">
-                          {video.views.toLocaleString()} wyswietlen
-                        </p>
-                      </CardContent>
-                    </Card>
-                  ))}
+                    </div>
+                    <Badge className="absolute bottom-2 right-2 bg-black/70">
+                      {video.duration}
+                    </Badge>
+                  </div>
+                  <CardContent className="p-3">
+                    <p className="line-clamp-2 text-sm font-medium">{video.title}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {video.views.toLocaleString()} wyswietlen
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          <Dialog
+            open={videoDialogOpen}
+            onOpenChange={(open) => {
+              setVideoDialogOpen(open)
+              if (!open) setActiveVideo(null)
+            }}
+          >
+            <DialogContent className="sm:max-w-3xl p-4 sm:p-6">
+              <DialogHeader>
+                <DialogTitle>{activeVideo?.title ?? "Odtwarzacz"}</DialogTitle>
+                <DialogDescription>
+                  Symulacja odtwarzacza wideo.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="overflow-hidden rounded-xl border border-border/50 bg-secondary">
+                <div className="relative aspect-video w-full">
+                  {activeVideo?.thumbnail ? (
+                    <img
+                      src={activeVideo.thumbnail}
+                      alt={activeVideo.title}
+                      className="h-full w-full object-cover opacity-70"
+                    />
+                  ) : null}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90">
+                      <Play className="h-7 w-7 text-primary" />
+                    </div>
+                    <p className="text-sm font-medium text-white">Odtwarzanie</p>
+                    {activeVideo?.duration ? (
+                      <p className="text-xs text-white/80">Czas trwania: {activeVideo.duration}</p>
+                    ) : null}
+                  </div>
                 </div>
               </div>
+            </DialogContent>
+          </Dialog>
 
-              <div className="mb-12">
+          <div className="mb-12">
                 <h3 className="mb-6 text-xl font-semibold">Poradniki krok po kroku</h3>
                 <div className="grid gap-4 lg:grid-cols-3">
                   {quickGuides.map((guide, idx) => (
@@ -571,8 +630,6 @@ export default function FAQPage() {
                   ))}
                 </div>
               </div>
-            </>
-          )}
 
           <Card className="mb-8">
             <CardHeader>
@@ -581,7 +638,7 @@ export default function FAQPage() {
                 Nadal potrzebujesz pomocy?
               </CardTitle>
               <CardDescription>
-                Skontaktuj sie z naszym zespolem wsparcia
+                Skontaktuj się z naszym zespołem wsparcia
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -606,7 +663,13 @@ export default function FAQPage() {
                     <p className="mt-2 text-xs text-muted-foreground">Odpowiedz w 24h</p>
                   </CardContent>
                 </Card>
-                <Card className="cursor-pointer border-2 border-primary/20 bg-primary/5 transition-colors hover:bg-primary/10">
+                <Card
+                  className="cursor-pointer border-2 border-primary/20 bg-primary/5 transition-colors hover:bg-primary/10"
+                  onClick={() => {
+                    setIsMinimized(false)
+                    setIsOpen(true)
+                  }}
+                >
                   <CardContent className="flex flex-col items-center p-6 text-center">
                     <div className="mb-3 rounded-full bg-primary p-4">
                       <MessageCircle className="h-6 w-6 text-primary-foreground" />
@@ -626,14 +689,14 @@ export default function FAQPage() {
                   <div className="mb-4 rounded-full bg-green-100 p-4">
                     <CheckCircle2 className="h-10 w-10 text-green-600" />
                   </div>
-                  <h3 className="text-xl font-medium">Wiadomosc wyslana!</h3>
+                  <h3 className="text-xl font-medium">Wiadomość wysłana!</h3>
                   <p className="mt-1 text-muted-foreground">
-                    Odpowiemy najszybciej jak to mozliwe
+                    Odpowiemy najszybciej jak to możliwe
                   </p>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <h4 className="font-medium">Wyslij wiadomosc</h4>
+                  <h4 className="font-medium">Wyślij wiadomość</h4>
                   <Select
                     value={contactForm.topic}
                     onValueChange={(value) => setContactForm(prev => ({ ...prev, topic: value }))}
@@ -642,18 +705,18 @@ export default function FAQPage() {
                       <SelectValue placeholder="Wybierz temat" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="order">Problem z zamowieniem</SelectItem>
+                      <SelectItem value="order">Problem z zamówieniem</SelectItem>
                       <SelectItem value="delivery">Dostawa</SelectItem>
-                      <SelectItem value="payment">Platnosci</SelectItem>
-                      <SelectItem value="diet">Pytanie o diete</SelectItem>
-                      <SelectItem value="account">Konto uzytkownika</SelectItem>
+                      <SelectItem value="payment">Płatności</SelectItem>
+                      <SelectItem value="diet">Pytanie o dietę</SelectItem>
+                      <SelectItem value="account">Konto użytkownika</SelectItem>
                       <SelectItem value="feedback">Opinia / Sugestia</SelectItem>
                       <SelectItem value="other">Inne</SelectItem>
                     </SelectContent>
                   </Select>
 
                   <Textarea
-                    placeholder="Opisz swoj problem lub pytanie..."
+                    placeholder="Opisz swój problem lub pytanie..."
                     value={contactForm.message}
                     onChange={(e) => setContactForm(prev => ({ ...prev, message: e.target.value }))}
                     rows={4}
@@ -662,7 +725,7 @@ export default function FAQPage() {
                   <div className="flex items-center justify-between">
                     <p className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Clock className="h-4 w-4" />
-                      Sredni czas odpowiedzi: {"< 2 godziny"}
+                      Średni czas odpowiedzi: {"< 2 godziny"}
                     </p>
                     <Button
                       onClick={handleSubmitContact}
@@ -670,7 +733,7 @@ export default function FAQPage() {
                       className="gap-2"
                     >
                       <Send className="h-4 w-4" />
-                      Wyslij
+                      Wyślij
                     </Button>
                   </div>
                 </div>
