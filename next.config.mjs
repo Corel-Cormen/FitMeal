@@ -2,7 +2,6 @@
 const nextConfig = {
   output: 'export',
   basePath: '/FitMeal',
-  assetPrefix: '/FitMeal/',
   trailingSlash: true,
   images: {
     unoptimized: true
