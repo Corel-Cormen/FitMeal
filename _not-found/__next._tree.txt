@@ -1,3 +1,3 @@
 :HL["/FitMeal/_next/static/chunks/09iwg2gfovx9p.css","style"]
-:HL["/FitMeal/_next/static/chunks/0xwycn1lvdt_2.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"_9DGzppKUWVJz0pZjj_Ef"}
+:HL["/FitMeal/_next/static/chunks/0zvyahh-lq81n.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"0eYuaVuc7W1SvZxQ-Qz44"}
