@@ -1,0 +1,10 @@
+:HL["/_next/static/chunks/09iwg2gfovx9p.css","style"]
+:HL["/_next/static/chunks/01qd3cpcmkatz.css","style"]
+:HL["/_next/static/media/83afe278b6a6bb3c-s.p.0q-301v4kxxnr.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/e8f2fbee2754df70-s.p.0fzkl03jw-sdz.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=500&fit=crop","image"]
+:HL["https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=400&fit=crop","image"]
+:HL["https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=400&fit=crop","image"]
+:HL["https://images.unsplash.com/photo-1547592180-85f173990554?w=400&h=500&fit=crop","image"]
+:HL["/images/fitmeal-logo.png","image"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"UOPTNVN-6m-XQu7wzMTnU"}
