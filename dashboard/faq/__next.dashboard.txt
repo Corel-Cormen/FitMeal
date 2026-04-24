@@ -2,4 +2,4 @@
 2:I[39756,["/FitMeal/_next/static/chunks/100xf-pxwco-l.js","/FitMeal/_next/static/chunks/10~9594msmm2j.js","/FitMeal/_next/static/chunks/186gf61j9-uul.js"],"default"]
 3:I[37457,["/FitMeal/_next/static/chunks/100xf-pxwco-l.js","/FitMeal/_next/static/chunks/10~9594msmm2j.js","/FitMeal/_next/static/chunks/186gf61j9-uul.js"],"default"]
 4:[]
-0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W4","buildId":"W8XQpF6rK9k74l-nf9DFN"}
+0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W4","buildId":"UpvamGKrRM4vDP9YRbGp7"}
