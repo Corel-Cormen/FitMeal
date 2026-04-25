@@ -15,7 +15,7 @@ export function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2">
           <Image
-            src="/images/fitmeal-logo.png"
+            src="/FitMeal/images/fitmeal-logo.png"
             alt="FitMeal Logo"
             width={36}
             height={36}
