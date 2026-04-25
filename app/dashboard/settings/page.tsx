@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo } from "react"
+import { Suspense, useMemo } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 
@@ -10,7 +10,7 @@ import { UserSettingsForm, type UserSettingsTab } from "@/components/dashboard/u
 
 import { ArrowLeft, Settings, Save } from "lucide-react"
 
-export default function DashboardSettingsPage() {
+function SettingsContent() {
   const searchParams = useSearchParams()
   const formId = "dashboard-settings-form"
 
@@ -59,5 +59,13 @@ export default function DashboardSettingsPage() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function DashboardSettingsPage() {
+  return (
+    <Suspense>
+      <SettingsContent />
+    </Suspense>
   )
 }
