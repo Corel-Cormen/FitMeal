@@ -23,7 +23,8 @@ import {
   Salad,
   Package,
   Heart,
-  HelpCircle
+  HelpCircle,
+  Stethoscope
 } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet"
 import { NotificationsPanel } from "./notifications-panel"
@@ -34,6 +35,7 @@ const navItems = [
   { label: "Moje zamówienia", href: "/dashboard#tracking", icon: Package },
   { label: "Preferencje", href: "/dashboard#preferences", icon: Heart },
   { label: "Wybierz dietę", href: "/dashboard/start", icon: Salad },
+  { label: "Dietetyk", href: "/dashboard/consultation", icon: Stethoscope },
   { label: "Pomoc", href: "/dashboard/faq", icon: HelpCircle },
 ]
 
