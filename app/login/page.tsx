@@ -145,7 +145,7 @@ function LoginContent() {
       {/* Full-width background image */}
       <div className="fixed inset-0 hidden lg:block">
         <Image
-          src="/FitMeal/images/login-hero.png"
+          src="/FitMeal/images/login-hero.webp"
           alt="Zdrowe jedzenie"
           fill
           className="object-cover brightness-[0.85] saturate-[1.1]"
@@ -170,17 +170,17 @@ function LoginContent() {
           
           <div className="relative z-10 max-w-sm space-y-6">
             <h1 className="text-3xl font-bold tracking-tight text-white xl:text-4xl">
-              Odkryj smak zdrowego zycia
+              Odkryj smak zdrowego życia
             </h1>
             <p className="text-base text-white/80 xl:text-lg">
-              Dostarczamy zbilansowane posilki prosto pod Twoje drzwi.
+              Dostarczamy zbilansowane posiłki prosto pod Twoje drzwi.
             </p>
             
             {/* Feature badges */}
             <div className="flex flex-col gap-2 pt-2">
               <div className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">
                 <Utensils className="h-4 w-4 text-primary" />
-                <span className="text-sm text-white">Swieze skladniki</span>
+                <span className="text-sm text-white">Swieże składniki</span>
               </div>
               <div className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">
                 <Heart className="h-4 w-4 text-red-400" />
@@ -196,7 +196,7 @@ function LoginContent() {
           {/* Testimonial */}
           <div className="relative z-10 max-w-sm rounded-xl bg-white/10 p-5 backdrop-blur-md">
             <p className="text-sm text-white/90 italic xl:text-base">
-              &quot;FitMeal calkowicie zmienil moje podejscie do jedzenia!&quot;
+              &quot;FitMeal całkowicie zmienił moje podejście do jedzenia!&quot;
             </p>
             <div className="mt-3 flex items-center gap-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 text-xs text-primary">
@@ -459,7 +459,7 @@ function LoginContent() {
                   <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20">
                     <span className="text-xs text-primary">2</span>
                   </div>
-                  Zdrowe, zbilansowane posilki
+                  Zdrowe, zbilansowane posiłki
                 </li>
                 <li className="flex items-center gap-3 text-sm text-white/80">
                   <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20">

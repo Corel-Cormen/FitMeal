@@ -417,7 +417,7 @@ export default function OnboardingPage() {
       {/* Full-width background image */}
       <div className="fixed inset-0 hidden lg:block">
         <Image
-          src="/FitMeal/images/onboarding-hero.png"
+          src="/FitMeal/images/onboarding-hero.webp"
           alt="Przygotowane posilki"
           fill
           className="object-cover brightness-[0.85] saturate-[1.1]"
@@ -445,7 +445,7 @@ export default function OnboardingPage() {
               Prawie gotowe!
             </h1>
             <p className="text-sm text-white/80 xl:text-base">
-              Uzupelnij swoje dane, abysmy mogli dostarczac Ci swieze posilki.
+              Uzupelnij swoje dane, abyśmy mogli dostarczać Ci świeże posiłki.
             </p>
             
             {/* Benefits */}
@@ -456,7 +456,7 @@ export default function OnboardingPage() {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-white">Dostawa 6:00-9:00</p>
-                  <p className="text-xs text-white/60">Swieze sniadanie co rano</p>
+                  <p className="text-xs text-white/60">Świeże śniadanie co rano</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -465,7 +465,7 @@ export default function OnboardingPage() {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-white">Bezpieczne dane</p>
-                  <p className="text-xs text-white/60">Twoje dane sa u nas bezpieczne</p>
+                  <p className="text-xs text-white/60">Twoje dane są u nas bezpieczne</p>
                 </div>
               </div>
             </div>
@@ -829,7 +829,7 @@ export default function OnboardingPage() {
               <ul className="space-y-2">
                 <li className="flex items-center gap-2 text-sm text-white/80">
                   <CheckCircle2 className="h-4 w-4 text-green-400" />
-                  Spersonalizowane posilki
+                  Spersonalizowane posiłki
                 </li>
                 <li className="flex items-center gap-2 text-sm text-white/80">
                   <CheckCircle2 className="h-4 w-4 text-green-400" />
@@ -837,7 +837,7 @@ export default function OnboardingPage() {
                 </li>
                 <li className="flex items-center gap-2 text-sm text-white/80">
                   <CheckCircle2 className="h-4 w-4 text-green-400" />
-                  Pelne wsparcie dietetyka
+                  Pełne wsparcie dietetyka
                 </li>
               </ul>
             </div>

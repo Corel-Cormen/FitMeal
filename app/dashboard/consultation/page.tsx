@@ -65,7 +65,7 @@ const dietitians = [
     languages: ["Polski", "Angielski"],
     nextAvailable: "Dzis, 14:00",
     price: 150,
-    bio: "Specjalizuje sie w dietetyce sportowej i klinicznej. Pomogla ponad 1000 pacjentom osiagnac ich cele zdrowotne.",
+    bio: "Specjalizuje się w dietetyce sportowej i klinicznej. Pomogła ponad 1000 pacjentom osiagnąć ich cele zdrowotne.",
     featured: true,
   },
   {
@@ -81,7 +81,7 @@ const dietitians = [
     languages: ["Polski"],
     nextAvailable: "Jutro, 10:00",
     price: 120,
-    bio: "Ekspert w dziedzinie zywienia sportowcow. Wspolpracuje z klubami sportowymi i zawodnikami.",
+    bio: "Ekspert w dziedzinie żywienia sportowców. Współpracuje z klubami sportowymi i zawodnikami.",
     featured: false,
   },
   {
@@ -97,7 +97,7 @@ const dietitians = [
     languages: ["Polski", "Niemiecki"],
     nextAvailable: "Pojutrze, 16:00",
     price: 180,
-    bio: "Specjalistka zywienia dzieci i mlodziezy. Autorka ksiazek o zdrowym zywieniu rodziny.",
+    bio: "Specjalistka żywienia dzieci i mlodziezy. Autorka książek o zdrowym żywieniu rodziny.",
     featured: true,
   },
 ]
@@ -123,8 +123,8 @@ const consultationTypes = [
     id: "chat",
     name: "Konsultacja czatowa",
     icon: MessageSquare,
-    description: "Wymiana wiadomosci z dietetykiem",
-    duration: "Do 24h na odpowiedz",
+    description: "Wymiana wiadomości z dietetykiem",
+    duration: "Do 24h na odpowiedź",
     popular: false,
   },
 ]
@@ -133,22 +133,22 @@ const benefits = [
   {
     icon: Sparkles,
     title: "Spersonalizowane plany",
-    description: "Dieta dopasowana do Twoich celow, preferencji i stylu zycia",
+    description: "Dieta dopasowana do Twoich celów, preferencji i stylu życia",
   },
   {
     icon: Shield,
     title: "Certyfikowani specjalisci",
-    description: "Wszyscy nasi dietetycy posiadaja odpowiednie kwalifikacje",
+    description: "Wszyscy nasi dietetycy posiadają odpowiednie kwalifikacje",
   },
   {
     icon: Clock,
     title: "Elastyczne terminy",
-    description: "Konsultacje dostepne 7 dni w tygodniu, rowniez wieczorami",
+    description: "Konsultacje dostepne 7 dni w tygodniu, również wieczorami",
   },
   {
     icon: Heart,
     title: "Wsparcie ciągle",
-    description: "Masz pytania miedzy konsultacjami? Napisz do nas!",
+    description: "Masz pytania między konsultacjami? Napisz do nas!",
   },
 ]
 
@@ -157,21 +157,21 @@ const testimonials = [
     name: "Katarzyna M.",
     avatar: "KM",
     rating: 5,
-    text: "Dr Kowalska calkowicie zmienila moje podejscie do jedzenia. Schudlam 15kg w 6 miesiecy!",
+    text: "Dr Kowalska całkowicie zmieniła moje podejscie do jedzenia. Schudłam 15kg w 6 miesięcy!",
     date: "2 tygodnie temu",
   },
   {
     name: "Piotr S.",
     avatar: "PS",
     rating: 5,
-    text: "Profesjonalne podejscie i konkretne wskazowki. Polecam kazdemu sportowcowi.",
-    date: "1 miesiac temu",
+    text: "Profesjonalne podejscie i konkretne wskazówki. Polecam każdemu sportowcowi.",
+    date: "1 miesiąc temu",
   },
   {
     name: "Magdalena K.",
     avatar: "MK",
     rating: 5,
-    text: "Dzięki konsultacji moje dziecko w koncu je zdrowo. Jestem bardzo wdzieczna!",
+    text: "Dzięki konsultacji moje dziecko w koncu je zdrowo. Jestem bardzo wdzięczna!",
     date: "3 tygodnie temu",
   },
 ]
